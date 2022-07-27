@@ -7,7 +7,7 @@
 #' This method is based on an approximation of the SIR model, which is most valid at the beginning of an epidemic.  The method assumes that the mean of the serial distribution (sometimes called the serial interval) is known.  The final estimate can be quite sensitive to this value, so sensitivity testing is recommended. Users should be careful about units of time (e.g. are counts observed daily or weekly?) when implementing.  
 #'
 #' @param NT Vector of case counts
-#' @param mu Mean of the serial distribution (needs to match case counts in time units; for example, if case counts are weekly and the serial distribution has a mean of seven days, then \code{mu} should be set to one)
+#' @param mu Mean of the serial distribution (needs to match case counts in time units; for example, if case counts are weekly and the serial distribution has a mean of seven days, then \code{mu} should be set to one, if case counts are daily and the serial distribution has a mean of seven days, then \code{mu} should be set to seven)
 #'
 #' @return \code{ID} returns a list containing the following components:  \code{Rhat} is the estimate of R0  and \code{inputs} is a list of the original input variables \code{NT, mu}.  
 #'
