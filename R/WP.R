@@ -31,6 +31,7 @@
 #' res2	<- WP(NT=NT, mu=3/7, method="known")	
 #' res2$Rhat
 #' ## obtain Rhat when serial distribution is unknown
+#' ## NOTE:  this implementation will take longer to run
 #' res3	<- WP(NT=NT)	
 #' res3$Rhat
 #' ## find mean of estimated serial distribution
