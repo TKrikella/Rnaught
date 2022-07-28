@@ -2,16 +2,16 @@
 #'
 #' This function implements a sequential Bayesian estimation method of R0 due to Bettencourt and Riberio (PloS One, 2008).  See details for important implementation notes.
 #'
-#'The method sets a uniform prior distribution on R0 with support (possible values) set from zero to \code{kappa}.  Our approach discretizes the distribution of R0 on a fine grid.   The distribution of R0 is then updated sequentially, with one update for each new case count observation.  The final estimate of R0 is \code{Rhat}, the mean of the (last) posterior distribution.
+#'The method sets a uniform prior distribution on R0 with possible values between zero and \code{kappa}, discretized to a fine grid.   The distribution of R0 is then updated sequentially, with one update for each new case count observation.  The final estimate of R0 is \code{Rhat}, the mean of the (last) posterior distribution.
 #' The prior distribution is the initial belief of the distribution of R0; which in this implementation is the uninformative uniform distribution with values between zero and kappa.  Users can change the value of kappa only (ie. the prior distribution cannot be changed from the uniform).  As more case counts are observed, the influence of the prior distribution should lessen on the final estimate \code{Rhat}.
 #'
-#' This method is based on an approximation of the SIR model, which is most valid at the beginning of an epidemic.  The method assumes that the mean of the serial distribution (sometimes called the serial interval) is known.  The final estimate can be quite sensitive to this value, so sensitivity testing is recommended. Users should be careful about units of time (e.g. are counts observed daily or weekly?) when implementing.  
+#' This method is based on an approximation of the SIR model, which is most valid at the beginning of an epidemic.  The method assumes that the mean of the serial distribution (sometimes called the serial interval) is known.  The final estimate can be quite sensitive to this value, so sensitivity testing is strongly recommended.  Users should be careful about units of time (e.g. are counts observed daily or weekly?) when implementing.  
 #'
 #' Our code has been modified to provide an estimate even if case counts equal to zero are present in some time intervals.  This is done by grouping the counts over such periods of time.  Without grouping, and in the presence of zero counts, no estimate can be provided.
 #'
 #' @param NT Vector of case counts
-#' @param mu Mean of the serial distribution (needs to match case counts in time units; for example, if case counts are weekly and the serial distribution has a mean of seven days, then mu should be set to 1)
-#' @param kappa Largest possible value of uniform prior, defaults to 20.    
+#' @param mu Mean of the serial distribution (needs to match case counts in time units; for example, if case counts are weekly and the serial distribution has a mean of seven days, then mu should be set to 1=7/7, if case counts are dailty and the serial distribution has a mean of seven days, then mu should be set to seven).
+#' @param kappa Largest possible value of uniform prior, defaults to 20.    This describes the prior belief on ranges of R0, so should be set to a higher value if R0 is believed to be larger.  
 #'
 #' @return secB returns a list containing the following components:  \code{Rhat} is the estimate of R0 (the posterior mean), \code{posterior} is the posterior distribution of R0 from which alternate estimates can be obtained (see examples), \code{group} is an indicator variable (if \code{group=TRUE}, zero values of NT were input and grouping was done to obtain \code{Rhat}), and \code{inputs} is a list of the original input variables \code{NT, gamma, kappa}.  The variable \code{posterior} is returned as a list made up of \code{supp} the support of the distribution and \code{pmf} the probability mass function.
 #'
@@ -29,9 +29,9 @@
 #' res2	<- seqB(NT=NT, mu=3/7)	
 #' res2$Rhat
 #'
-#' ## ===================================================== ##
-#' ## Compute posterior mode instead of posterior mean      ##
-#' ## ===================================================== ##
+#' ## ============================================================= ##
+#' ## Compute posterior mode instead of posterior mean and plot     ##
+#' ## ============================================================= ##
 #'
 #' Rpost <-	res1$posterior
 #' loc <- which(Rpost$pmf==max(Rpost$pmf))
