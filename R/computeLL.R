@@ -2,10 +2,11 @@
 #'
 #' This is a background/internal function called by \code{WP}.  It computes the log-likelihood.
 #'
-#' @param NT vector of case counts
-#' @param p discretized version of the serial distribution
-#' @param R0 basic reproductive ratio
-#' @return The function returns the variable \code{LL} which is the log-likelihood at the input variables and parameters.
+#' @param NT Vector of case counts.
+#' @param p Discretized version of the serial distribution.
+#' @param R0 Basic reproductive ratio.
+#'
+#' @return This function returns the log-likelihood at the input variables and parameters.
 #'
 #' @export
 computeLL <- function(p, NT, R0) {

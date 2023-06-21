@@ -3,9 +3,10 @@
 #' This is a background/internal function called by \code{WP}. It computes the maximum
 #' likelihood estimator of R0 assuming that the serial distribution is known and finite discrete.
 #'
-#' @param NT vector of case counts
-#' @param p discretized version of the serial distribution
-#' @return The function returns \code{Rhat}, the maximum likelihood estimator of R0.
+#' @param NT Vector of case counts.
+#' @param p Discretized version of the serial distribution.
+#'
+#' @return The function returns the maximum likelihood estimator of R0.
 #'
 #' @export
 WP_known <- function(NT, p) {

@@ -19,7 +19,7 @@ source("WP_unknown.R")
 #' is strongly recommended. If the serial distribution is unknown (i.e., \code{mu} is \code{NA}), the
 #' likelihood function can be flat near the maximum, resulting in numerical instability of the optimizer.
 #' When \code{mu} is \code{NA}, the implementation takes considerably longer to run. Users should be careful
-#' about units of time (e.g. are counts observed daily or weekly?) when implementing.  
+#' about units of time (e.g., are counts observed daily or weekly?) when implementing.  
 #'
 #' The model developed in White and Pagano (2008) is discrete, and hence the serial distribution is finite 
 #' discrete. In our implementation, the input value \code{mu} is that of a continuous distribution. The
@@ -28,27 +28,26 @@ source("WP_unknown.R")
 #' user notices that the input \code{mu} and output mean of \code{SD} are different, this is to be expected,
 #' and is caused by the discretization.
 #'
-#' @param NT Vector of case counts
+#' @param NT Vector of case counts.
 #' @param mu Mean of the serial distribution (needs to match case counts in time units; for example, if case
 #'           counts are weekly and the serial distribution has a mean of seven days, then \code{mu} should be
 #'           set to one). The default value of \code{mu} is set to \code{NA}.
-#' @param search List of default values for the grid search algorithm; the list includes three elements: the
-#'               first is \code{B} which is the length of the grid in one dimension, the second is
-#'               \code{scale.max} which is the largest possible value of the scale parameter, and the third is
-#'               \code{shape.max} which is the largest possible value of the shape parameter; defaults to
+#' @param search List of default values for the grid search algorithm. The list includes three elements: the
+#'               first is \code{B}, which is the length of the grid in one dimension; the second is
+#'               \code{scale.max}, which is the largest possible value of the scale parameter; and the third
+#'               is \code{shape.max}, which is the largest possible value of the shape parameter. Defaults to
 #'               \code{B=100, scale.max=10, shape.max=10}. For both shape and scale, the smallest possible
-#'               value is 1/\code{B}.  
+#'               value is 1/\code{B}.
 #' @param tol Cutoff value for cumulative distribution function of the pre-discretization gamma serial
-#'            distribution, defaults to 0.999 (i.e. in the discretization, the maximum is chosen such that the
+#'            distribution. Defaults to 0.999 (i.e. in the discretization, the maximum is chosen such that the
 #'            original gamma distribution has cumulative probability of no more than 0.999 at this maximum).
 #'
-#' @return WP returns a list containing the following components:  \code{Rhat} is the estimate of R0, \code{SD}
-#'            is either the discretized serial distribution (if \code{mu} is not \code{NA}) or the estimated
-#'            discretized serial distribution (if \code{mu} is \code{NA}), and \code{inputs} is a list of the
-#'            original input variables \code{NT, mu, method, search, tol}. The list also returns the variable
-#'            \code{check}, which is equal to the number of non-unique maximum likelihood estimators. The serial
-#'            distribution \code{SD} is returned as a list made up of \code{supp} the support of the distribution
-#'            and \code{pmf} the probability mass function.  
+#' @return \code{WP} returns a list containing the following components:  \code{Rhat} is the estimate of R0,
+#'         and \code{SD} is either the discretized serial distribution (if \code{mu} is not \code{NA}), or the
+#'         estimated discretized serial distribution (if \code{mu} is \code{NA}). The list also returns the
+#'         variable \code{check}, which is equal to the number of non-unique maximum likelihood estimators.
+#'         The serial distribution \code{SD} is returned as a list made up of \code{supp} (the support of
+#'         the distribution) and \code{pmf} (the probability mass function).
 #'
 #' @examples
 #' ## ===================================================== ##

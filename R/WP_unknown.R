@@ -8,11 +8,11 @@ source("WP_known.R")
 #' The function then implements a simple grid search algorithm to obtain the maximum likelihood estimator
 #' of R0 as well as the gamma parameters.
 #'
-#' @param NT vector of case counts
-#' @param B length of grid for shape and scale (grid search parameter)
-#' @param shape.max maximum shape value (grid search parameter)
-#' @param scale.max maximum scale value (grid search parameter)
-#' @param tol cutoff value for cumulative distribution function of the serial distribution, defaults to 0.999
+#' @param NT Vector of case counts.
+#' @param B Length of grid for shape and scale (grid search parameter).
+#' @param shape.max Maximum shape value (grid \code{search} parameter).
+#' @param scale.max Maximum scale value (grid \code{search} parameter).
+#' @param tol cutoff value for cumulative distribution function of the serial distribution (defaults to 0.999).
 #'
 #' @return The function returns \code{Rhat}, the maximum likelihood estimator of R0, as well as the maximum
 #'         likelihood estimator of the discretized serial distribution given by \code{p} (the probability mass
@@ -20,8 +20,8 @@ source("WP_known.R")
 #'         The function also returns \code{resLL} (all values of the log-likelihood) at \code{shape} (grid for
 #'         shape parameter) and at \code{scale} (grid for scale parameter), as well as \code{resR0} (the full
 #'         vector of maximum likelihood estimators), \code{JJ} (the locations for the likelihood for these), and
-#'         \code{J0} (the location for the maximum likelihood estimator \code{Rhat}).  If \code{JJ} and \code{J0}
-#'         are not the same, this means that the maximum likelihood estimator is not unique. 
+#'         \code{J0} (the location for the maximum likelihood estimator \code{Rhat}). If \code{JJ} and \code{J0}
+#'         are not the same, this means that the maximum likelihood estimator is not unique.
 #'
 #' @export
 WP_unknown <- function(NT, B=100, shape.max=10, scale.max=10, tol=0.999) {
