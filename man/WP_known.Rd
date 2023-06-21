@@ -7,13 +7,14 @@
 WP_known(NT, p)
 }
 \arguments{
-\item{NT}{vector of case counts}
+\item{NT}{Vector of case counts.}
 
-\item{p}{discretized version of the serial distribution}
+\item{p}{Discretized version of the serial distribution.}
 }
 \value{
-The function returns \code{Rhat}, the maximum likelihood estimator of R0.
+The function returns the maximum likelihood estimator of R0.
 }
 \description{
-This is a background/internal function called by \code{WP}.  It computes the maximum likelihood estimator of R0 assuming that the serial distribution is known and finite discrete.
+This is a background/internal function called by \code{WP}. It computes the maximum
+likelihood estimator of R0 assuming that the serial distribution is known and finite discrete.
 }

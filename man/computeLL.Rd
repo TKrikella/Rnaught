@@ -7,14 +7,14 @@
 computeLL(p, NT, R0)
 }
 \arguments{
-\item{p}{discretized version of the serial distribution}
+\item{p}{Discretized version of the serial distribution.}
 
-\item{NT}{vector of case counts}
+\item{NT}{Vector of case counts.}
 
-\item{R0}{basic reproductive ratio}
+\item{R0}{Basic reproductive ratio.}
 }
 \value{
-The function returns the variable \code{LL} which is the log-likelihood at the input variables and parameters.
+This function returns the log-likelihood at the input variables and parameters.
 }
 \description{
 This is a background/internal function called by \code{WP}.  It computes the log-likelihood.

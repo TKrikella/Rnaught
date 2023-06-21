@@ -7,19 +7,29 @@
 WP_unknown(NT, B = 100, shape.max = 10, scale.max = 10, tol = 0.999)
 }
 \arguments{
-\item{NT}{vector of case counts}
+\item{NT}{Vector of case counts.}
 
-\item{B}{length of grid for shape and scale (grid search parameter)}
+\item{B}{Length of grid for shape and scale (grid search parameter).}
 
-\item{shape.max}{maximum shape value (grid search parameter)}
+\item{shape.max}{Maximum shape value (grid \code{search} parameter).}
 
-\item{scale.max}{maximum scale value (grid search parameter)}
+\item{scale.max}{Maximum scale value (grid \code{search} parameter).}
 
-\item{tol}{cutoff value for cumulative distribution function of the serial distribution, defaults to 0.999}
+\item{tol}{cutoff value for cumulative distribution function of the serial distribution (defaults to 0.999).}
 }
 \value{
-The function returns \code{Rhat}, the maximum likelihood estimator of R0, as well as the maximum likelihood estimator of the discretized serial distribution given by \code{p} (the probability mass function) and \code{range.max} (the distribution has support on the integers one to \code{range.max}).  The function also returns \code{resLL} (all values of the log-likelihood) at \code{shape} (grid for shape parameter) and at \code{scale} (grid for scale parameter), as well as \code{resR0} (the full vector of maximum likelihood estimators), \code{JJ} (the locations for the likelihood for these), and \code{J0} (the location for the maximum likelihood estimator \code{Rhat}).  If \code{JJ} and \code{J0} are not the same, this means that the maximum likelihood estimator is not unique.
+The function returns \code{Rhat}, the maximum likelihood estimator of R0, as well as the maximum
+        likelihood estimator of the discretized serial distribution given by \code{p} (the probability mass
+        function) and \code{range.max} (the distribution has support on the integers one to \code{range.max}).
+        The function also returns \code{resLL} (all values of the log-likelihood) at \code{shape} (grid for
+        shape parameter) and at \code{scale} (grid for scale parameter), as well as \code{resR0} (the full
+        vector of maximum likelihood estimators), \code{JJ} (the locations for the likelihood for these), and
+        \code{J0} (the location for the maximum likelihood estimator \code{Rhat}). If \code{JJ} and \code{J0}
+        are not the same, this means that the maximum likelihood estimator is not unique.
 }
 \description{
-This is a background/internal function called by \code{WP}.  It computes the maximum likelihood estimator of R0 assuming that the serial distribution is unknown but comes from a discretized gamma distribution.  The function then implements a simple grid search algorithm to obtain the maximum likelihood estimator of R0 as well as the gamma parameters.
+This is a background/internal function called by \code{WP}. It computes the maximum likelihood estimator
+of R0 assuming that the serial distribution is unknown but comes from a discretized gamma distribution.
+The function then implements a simple grid search algorithm to obtain the maximum likelihood estimator
+of R0 as well as the gamma parameters.
 }
