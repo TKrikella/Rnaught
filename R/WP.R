@@ -68,14 +68,14 @@
 #' res3	<- WP(NT=NT)	
 #' res3$Rhat
 #' ## find mean of estimated serial distribution
-#' serial	<-	res3$SD
-#' sum(serial$supp*serial$pmf)
+#' serial <- res3$SD
+#' sum(serial$supp * serial$pmf)
 #'
 #' ## ========================================================= ##
 #' ## Compute Rhat using only the first five weeks of data      ##
 #' ## ========================================================= ##
 #' 
-#' res4 <- WP(NT=NT[1:5], mu=5/7, method="known")	# serial distribution has mean of five days
+#' res4 <- WP(NT=NT[1:5], mu=5/7, method="known") # serial distribution has mean of five days
 #' res4$Rhat
 #'
 #' @export
@@ -99,10 +99,10 @@ WP <- function(NT, mu="NA", method="unknown", search=list(B=100, shape.max=10, s
             p <- diff(pexp(0:range.max, 1/mu))
             p <- p / sum(p)
             res <- WP_known(NT=NT, p=p)
-            Rhat <- res$Rhat
+            Rhat <- res
             JJ <- NA
         }
     }
 
-    return(list(Rhat=Rhat, check=length(JJ), SD=list(supp=1:range.max, pmf=p), inputs=list(NT=NT, mu=mu, method=method, search=search, tol=tol)))
+    return(list(Rhat=Rhat, check=length(JJ), SD=list(supp=1:range.max, pmf=p)))
 }

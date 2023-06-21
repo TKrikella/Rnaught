@@ -51,17 +51,17 @@
 #' ## ============================================================= ##
 #'
 #' Rpost <-	res1$posterior
-#' loc <- which(Rpost$pmf==max(Rpost$pmf))
-#' Rpost$supp[loc]		# posterior mode
-#' res1$Rhat		# compare with posterior mean
+#' loc <- which(Rpost$pmf == max(Rpost$pmf))
+#' Rpost$supp[loc] # posterior mode
+#' res1$Rhat # compare with posterior mean
 #'
-#' par(mfrow=c(2,1), mar=c(2,2,1,1))
+#' par(mfrow=c(2, 1), mar=c(2, 2, 1, 1))
 #' plot(Rpost$supp, Rpost$pmf, col="black", type="l", xlab="", ylab="")
 #' abline(h=1/(20/0.01+1), col="red")
 #' abline(v=res1$Rhat, col="blue")
 #' abline(v=Rpost$supp[loc], col="purple")
 #' legend("topright", legend=c("prior", "posterior", "posterior mean (Rhat)", "posterior mode"), col=c("red", "black", "blue", "purple"), lty=1)
-#' plot(Rpost$supp, Rpost$pmf, col="black", type="l", xlim=c(0.5,1.5), xlab="", ylab="")
+#' plot(Rpost$supp, Rpost$pmf, col="black", type="l", xlim=c(0.5, 1.5), xlab="", ylab="")
 #' abline(h=1/(20/0.01+1), col="red")
 #' abline(v=res1$Rhat, col="blue")
 #' abline(v=Rpost$supp[loc], col="purple")
@@ -70,7 +70,6 @@
 #' ## ========================================================= ##
 #' ## Compute Rhat using only the first five weeks of data      ##
 #' ## ========================================================= ##
-#'
 #' 
 #' res3 <- seqB(NT=NT[1:5], mu=5/7)	# serial distribution has mean of five days
 #' res3$Rhat
@@ -121,6 +120,6 @@ seqB <- function(NT, mu, kappa=20) {
 
         Rhat <- sum(R * posterior)
 
-        return(list(Rhat=Rhat, posterior=list(supp=R, pmf=posterior), group=group, inputs=list(NT=NT, mu=mu, kappa=kappa)))
+        return(list(Rhat=Rhat, posterior=list(supp=R, pmf=posterior), group=group))
     }	
 }

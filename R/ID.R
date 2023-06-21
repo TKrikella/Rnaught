@@ -20,26 +20,21 @@
 #'         \code{inputs} is a list of the original input variables \code{NT, mu}.
 #'
 #' @examples
-#'
 #' ## ===================================================== ##
 #' ## Illustrate on weekly data                             ##
 #' ## ===================================================== ##
 #'
 #' NT <- c(1, 4, 10, 5, 3, 4, 19, 3, 3, 14, 4)
 #' ## obtain Rhat when serial distribution has mean of five days
-#' res1 <- ID(NT=NT, mu=5/7)
-#' res1$Rhat
+#' ID(NT=NT, mu=5/7)
 #' ## obtain Rhat when serial distribution has mean of three days
-#' res2	<- ID(NT=NT, mu=3/7)
-#' res2$Rhat
+#' ID(NT=NT, mu=3/7)
 #'
 #' ## ========================================================= ##
 #' ## Compute Rhat using only the first five weeks of data      ##
 #' ## ========================================================= ##
 #'
-#'
-#' res3 <- ID(NT=NT[1:5], mu=5/7)		# serial distribution has mean of five days
-#' res3$Rhat
+#' ID(NT=NT[1:5], mu=5/7) # serial distribution has mean of five days
 #'
 #' @export
 ID <- function(NT, mu) {
@@ -50,5 +45,5 @@ ID <- function(NT, mu) {
 
     R0_ID <- exp(sum(y) / TT)
 
-    return(list=c(Rhat=R0_ID, inputs=list(NT=NT, mu=mu)))
+    return(R0_ID)
 }

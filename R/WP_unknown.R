@@ -36,8 +36,8 @@ WP_unknown <- function(NT, B=100, shape.max=10, scale.max=10, tol=0.999) {
             p <- diff(pgamma(0:range.max, shape=shape[i], scale=scale[j]))
             p <- p / sum(p)
             mle <- WP_known(NT, p)
-            resLL[i,j] <- computeLL(p, NT, mle$R)
-            resR0[i,j] <- mle$R
+            resLL[i,j] <- computeLL(p, NT, mle)
+            resR0[i,j] <- mle
         }
     }
 	

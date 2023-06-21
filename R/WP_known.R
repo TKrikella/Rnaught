@@ -19,5 +19,5 @@ WP_known <- function(NT, p) {
     }
 
     Rhat <- sum(NT[-1]) / sum(mu_t)
-	return(list(Rhat=Rhat))
+	return(Rhat)
 }
