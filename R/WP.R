@@ -1,3 +1,6 @@
+source("WP_known.R")
+source("WP_unknown.R")
+
 #' WP method
 #'
 #' This function implements an R0 estimation due to White and Pagano (Statistics in Medicine, 2008).

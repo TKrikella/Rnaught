@@ -1,3 +1,6 @@
+source("computeLL.R")
+source("WP_known.R")
+
 #' WP method background function WP_unknown
 #'
 #' This is a background/internal function called by \code{WP}. It computes the maximum likelihood estimator
