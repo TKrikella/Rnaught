@@ -18,3 +18,4 @@ The function returns the maximum likelihood estimator of R0.
 This is a background/internal function called by \code{WP}. It computes the maximum
 likelihood estimator of R0 assuming that the serial distribution is known and finite discrete.
 }
+\keyword{internal}

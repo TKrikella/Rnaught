@@ -19,3 +19,4 @@ This function returns the log-likelihood at the input variables and parameters.
 \description{
 This is a background/internal function called by \code{WP}.  It computes the log-likelihood.
 }
+\keyword{internal}

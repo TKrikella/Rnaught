@@ -3,7 +3,4 @@
 export(ID)
 export(IDEA)
 export(WP)
-export(WP_known)
-export(WP_unknown)
-export(computeLL)
 export(seqB)

@@ -8,7 +8,7 @@
 #'
 #' @return The function returns the maximum likelihood estimator of R0.
 #'
-#' @export
+#' @keywords internal
 WP_known <- function(NT, p) {
     k <- length(p)
     TT <- length(NT) - 1

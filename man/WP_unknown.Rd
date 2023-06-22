@@ -33,3 +33,4 @@ of R0 assuming that the serial distribution is unknown but comes from a discreti
 The function then implements a simple grid search algorithm to obtain the maximum likelihood estimator
 of R0 as well as the gamma parameters.
 }
+\keyword{internal}

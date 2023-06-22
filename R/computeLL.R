@@ -8,7 +8,7 @@
 #'
 #' @return This function returns the log-likelihood at the input variables and parameters.
 #'
-#' @export
+#' @keywords internal
 computeLL <- function(p, NT, R0) {
     k <- length(p)
     TT <- length(NT) - 1
