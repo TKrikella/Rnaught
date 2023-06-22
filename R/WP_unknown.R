@@ -20,6 +20,8 @@
 #'         \code{J0} (the location for the maximum likelihood estimator \code{Rhat}). If \code{JJ} and \code{J0}
 #'         are not the same, this means that the maximum likelihood estimator is not unique.
 #'
+#' @importFrom stats pgamma qgamma
+#'
 #' @keywords internal
 WP_unknown <- function(NT, B=100, shape.max=10, scale.max=10, tol=0.999) {
 	shape <- seq(0, shape.max, length.out=B+1)

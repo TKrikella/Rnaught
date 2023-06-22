@@ -73,6 +73,8 @@
 #' res4 <- WP(NT=NT[1:5], mu=5/7) # serial distribution has mean of five days
 #' res4$Rhat
 #'
+#' @importFrom stats pexp qexp
+#'
 #' @export
 WP <- function(NT, mu=NA, search=list(B=100, shape.max=10, scale.max=10), tol=0.999) {
     if (is.na(mu)) {
