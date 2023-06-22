@@ -59,12 +59,14 @@
 #' abline(h=1/(20/0.01+1), col="red")
 #' abline(v=res1$Rhat, col="blue")
 #' abline(v=Rpost$supp[loc], col="purple")
-#' legend("topright", legend=c("prior", "posterior", "posterior mean (Rhat)", "posterior mode"), col=c("red", "black", "blue", "purple"), lty=1)
+#' legend("topright", legend=c("prior", "posterior", "posterior mean (Rhat)", "posterior mode"),
+#'        col=c("red", "black", "blue", "purple"), lty=1)
 #' plot(Rpost$supp, Rpost$pmf, col="black", type="l", xlim=c(0.5, 1.5), xlab="", ylab="")
 #' abline(h=1/(20/0.01+1), col="red")
 #' abline(v=res1$Rhat, col="blue")
 #' abline(v=Rpost$supp[loc], col="purple")
-#' legend("topright", legend=c("prior", "posterior", "posterior mean (Rhat)", "posterior mode"), col=c("red", "black", "blue", "purple"), lty=1)
+#' legend("topright", legend=c("prior", "posterior", "posterior mean (Rhat)", "posterior mode"),
+#'        col=c("red", "black", "blue", "purple"), lty=1)
 #'
 #' ## ========================================================= ##
 #' ## Compute Rhat using only the first five weeks of data      ##
