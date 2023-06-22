@@ -1,0 +1,9 @@
+*.R     text
+*.Rd    text
+
+DESCRIPTION    text
+LICENSE        text
+NAMESPACE      text
+
+.gitattributes    text
+.gitignore        text
