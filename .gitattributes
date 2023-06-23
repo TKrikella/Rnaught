@@ -1,3 +1,5 @@
+* text=auto
+
 *.R     text
 *.Rd    text
 
