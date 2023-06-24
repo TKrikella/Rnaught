@@ -1,0 +1,16 @@
+bibentry("Manual",
+    other = unlist(citation(auto=meta), recursive=FALSE)
+)
+
+bibentry("Article",
+    doi = "10.1371/journal.pone.0269306",
+    author = "Sawitree Boonpatcharanon, Jane M. Heffernan, Hanna Jankowski" ,
+    journal = "PLOS ONE",
+    publisher = "Public Library of Science",
+    title = "Estimating the basic reproduction number at the beginning of an outbreak",
+    year = 2022,
+    month = 6,
+    volume = 17,
+    pages = "1-24",
+    number = 6
+)
