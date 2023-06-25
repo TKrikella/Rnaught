@@ -1,19 +1,6 @@
 #' @importFrom methods is
 #' @importFrom utils read.csv write.csv
 server <- function(input, output) {
-    # Hide the sidebar if the 'About' tab is active.
-    shiny::observeEvent(input$tabset, {
-        if (input$tabset == "About") {
-            shinyjs::hideElement(selector="#sidebar")
-            shinyjs::removeCssClass("main", "col-sm-8")
-            shinyjs::addCssClass("main", "col-sm-12")
-        } else {
-            shinyjs::showElement(selector="#sidebar")
-            shinyjs::removeCssClass("main", "col-sm-12")
-            shinyjs::addCssClass("main", "col-sm-8")
-        }
-    })
-
     reactive <- shiny::reactiveValues(
         data_table=data.frame(Name=character(0), `Reporting Frequency`=character(0), `Case Counts`=numeric(0), check.names=FALSE),
         est_table=data.frame(Dataset=character(0)),
