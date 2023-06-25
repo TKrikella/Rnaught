@@ -13,6 +13,10 @@ Description: A collection of methods for estimating the basic reproduction
 License: AGPL (>= 3)
 URL: https://github.com/hannajankowski/Rnaught
 BugReports: https://github.com/hannajankowski/Rnaught/issues
+Imports:
+    methods,
+    stats,
+    utils
 Suggests:
     shiny,
     shinyBS,
