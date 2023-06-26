@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: 'To cite package "Rnaught" in publications use:'
+type: software
+license: AGPL-3.0-or-later
+title: 'Rnaught: Estimate the Basic Reproduction Number of Infectious Diseases'
+version: 0.1.0
+doi: 10.1371/journal.pone.0269306
+abstract: A collection of methods for estimating the basic reproduction number (R0)
+  of infectious diseases. Optionally available as a web application using the 'shiny'
+  framework.
+authors:
+- family-names: Boonpatcharanon
+  given-names: Sawitree
+- family-names: Heffernan
+  given-names: Jane
+- family-names: Jankowski
+  given-names: Hanna
+- family-names: Model
+  given-names: Naeem
+  email: me@nmode.ca
+preferred-citation:
+  type: article
+  title: Estimating the basic reproduction number at the beginning of an outbreak
+  authors:
+  - family-names: Boonpatcharanon
+    given-names: Sawitree
+  - family-names: Heffernan
+    given-names: Jane M.
+  - family-names: Jankowski
+    given-names: Hanna
+  doi: 10.1371/journal.pone.0269306
+  journal: PLOS ONE
+  publisher:
+    name: Public Library of Science
+  year: '2022'
+  month: '6'
+  volume: '17'
+  issue: '6'
+  start: 1-24
+repository-code: https://github.com/hannajankowski/Rnaught
+contact:
+- family-names: Model
+  given-names: Naeem
+  email: me@nmode.ca
