@@ -11,7 +11,7 @@
 #' posterior distribution. The prior distribution is the initial belief of the
 #' distribution of R0, which is the uninformative uniform distribution with
 #' values between zero and \code{kappa}. Users can change the value of
-#' /code{kappa} only (i.e., the prior distribution cannot be changed from the
+#' \code{kappa} only (i.e., the prior distribution cannot be changed from the
 #' uniform). As more case counts are observed, the influence of the prior
 #' distribution should lessen on the final estimate \code{Rhat}.
 #'
@@ -41,7 +41,7 @@
 #'         \code{Rhat} is the estimate of R0 (the posterior mean),
 #'         \code{posterior} is the posterior distribution of R0 from which
 #'         alternate estimates can be obtained (see examples), and \code{group}
-#'         is an indicator variable (if \code{group=TRUE}, zero values of NT
+#'         is an indicator variable (if \code{group == TRUE}, zero values of NT
 #'         were input and grouping was done to obtain \code{Rhat}). The variable
 #'         \code{posterior} is returned as a list made up of \code{supp} (the
 #'         support of the distribution) and \code{pmf} (the probability mass

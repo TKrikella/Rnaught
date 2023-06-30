@@ -43,8 +43,8 @@
 #'               \code{scale.max}, which is the largest possible value of the
 #'               scale parameter; and the third is \code{shape.max}, which is
 #'               the largest possible value of the shape parameter. Defaults to
-#'               \code{B=100, scale.max=10, shape.max=10}. For both shape and
-#'               scale, the smallest possible value is 1/\code{B}.
+#'               \code{B = 100, scale.max = 10, shape.max = 10}. For both shape
+#'               and scale, the smallest possible value is 1/\code{B}.
 #' @param tol Cutoff value for cumulative distribution function of the
 #'            pre-discretization gamma serial distribution. Defaults to 0.999
 #'            (i.e. in the discretization, the maximum is chosen such that the

@@ -9,7 +9,7 @@
 #'
 #' @return The function returns the maximum likelihood estimator of R0.
 #'
-#' @keywords internal
+#' @noRd
 WP_known <- function(NT, p) {
   k <- length(p)
   TT <- length(NT) - 1
@@ -54,7 +54,7 @@ WP_known <- function(NT, p) {
 #'
 #' @importFrom stats pgamma qgamma
 #'
-#' @keywords internal
+#' @noRd
 WP_unknown <- function(NT, B = 100, shape.max = 10, scale.max = 10,
                        tol = 0.999) {
   shape <- seq(0, shape.max, length.out = B + 1)
@@ -91,14 +91,14 @@ WP_unknown <- function(NT, B = 100, shape.max = 10, scale.max = 10,
 #' This is a background/internal function called by \code{WP}. It computes the
 #' log-likelihood.
 #'
-#' @param NT Vector of case counts.
 #' @param p Discretized version of the serial distribution.
+#' @param NT Vector of case counts.
 #' @param R0 Basic reproductive ratio.
 #'
 #' @return This function returns the log-likelihood at the input variables and
 #'         parameters.
 #'
-#' @keywords internal
+#' @noRd
 computeLL <- function(p, NT, R0) {
   k <- length(p)
   TT <- length(NT) - 1
