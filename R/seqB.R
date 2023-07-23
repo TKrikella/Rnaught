@@ -78,9 +78,9 @@
 #'
 #' @export
 seqB <- function(NT, mu, kappa = 20) {
-  if (length(NT) < 2) {
+  if (length(NT) < 2)
     print("Warning: length of NT should be at least two.")
-  } else {
+  else {
     if (min(NT) > 0) {
       times <- 1:length(NT)
       tau <- diff(times)
