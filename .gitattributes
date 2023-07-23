@@ -3,6 +3,9 @@
 *.R     text
 *.Rd    text
 
+*.csv    text
+*.rda    binary
+
 DESCRIPTION    text
 LICENSE        text
 NAMESPACE      text
