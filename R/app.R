@@ -2,8 +2,8 @@
 #'
 #' @export
 app <- function() {
-    if (!requireNamespace("shiny", quietly=TRUE))
-        stop("The package 'shiny' must be installed to launch the Rnaught web application.")
+  if (!requireNamespace("shiny", quietly = TRUE))
+    stop("The package 'shiny' must be installed to launch the Rnaught web application.")
 
-    shiny::shinyApp(ui(), server)
+  shiny::shinyApp(ui, server)
 }
