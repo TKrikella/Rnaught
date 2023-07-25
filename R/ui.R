@@ -1,4 +1,4 @@
-ui <- shiny::fluidPage(
+ui <- function() { shiny::fluidPage(
   # Title.
   shiny::titlePanel(shiny::HTML(
     paste0("Rnaught: An Estimation Suite for R", shiny::tags$sub("0")))),
@@ -194,4 +194,4 @@ ui <- shiny::fluidPage(
       )
     )
   )
-)
+)}
