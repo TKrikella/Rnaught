@@ -23,9 +23,9 @@ ui <- function() { shiny::fluidPage(
               shiny::column(8,
                 shiny::textInput(inputId = "dataCounts", label = shiny::HTML(
                   paste0("Case counts", shiny::tags$sup("[?]",
-                    title = "Enter as a comma-separated list of positive
-                             integers, with at least two entries.
-                             Example: 1,1,2,3,5,8"))))),
+                    title = paste0("Enter as a comma-separated list of ",
+                                   "positive integers, with at least two ",
+                                   "entries. Example: 1,1,2,3,5,8")))))),
               shiny::column(4,
                 shiny::selectInput(inputId = "dataUnits",
                                    label = "Reporting frequency",
@@ -124,11 +124,12 @@ ui <- function() { shiny::fluidPage(
             ),
             shiny::span(shiny::textOutput(outputId = "serialseqBWarn"),
                         style = "color: red;"),
-            shiny::textInput(inputId = "kappaInput", label = shiny::HTML(
-              paste0("Maximum value", shiny::tags$sup("[?]",
-                title = "This describes the prior belief of R0, and should
-                         be set to a higher value if R0 is believed to be
-                         larger. (Default: 20)"))), value = "20"),
+            shiny::textInput(inputId = "kappaInput",
+              label = shiny::HTML(paste0("Maximum value", shiny::tags$sup("[?]",
+                title = paste0("This describes the prior belief of R0, and ",
+                               "should be set to a higher value if R0 is ",
+                               "believed to be larger. (Default: 20)")))),
+              value = "20"),
             shiny::span(shiny::textOutput(outputId = "kappaWarn"),
                         style = "color: red;"),
             shiny::actionButton(inputId = "addseqB", label = "Add")

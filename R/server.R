@@ -142,7 +142,7 @@ server <- function(input, output) {
           output$gridShapeWarn <- shiny::renderText("")
 
         if (is.na(max_scale) || max_scale < 1 / grid_length) {
-          output$gridShapeWarn <- shiny::renderText("Error: The maximum scale
+          output$gridScaleWarn <- shiny::renderText("Error: The maximum scale
             must be at least the reciprocal of the grid length.")
           checks_passed <- FALSE
         }
