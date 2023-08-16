@@ -60,7 +60,7 @@ ui <- function() { shiny::fluidPage(
           # WHITE & PANAGO (WP).
           shiny::tags$details(
             shiny::tags$summary(shiny::h4("White & Panago (WP)")),
-            shiny::p("Method due to [White and Pagano(2008)], assumes a branching process based model. Serial
+            shiny::p("Method due to White and Pagano (2008), assumes a branching process based model. Serial
 distribution can be assumed known or can be estimated using maximum likelihood;  When serial interval is unknown
 the method takes longer to compute, though is still real-time."),
             shiny::br(),
