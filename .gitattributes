@@ -1,14 +1,18 @@
-* text=auto
+*                 text=auto
 
-*.R     text
-*.Rd    text
+*.R               text
+*.Rd              text
 
-*.csv    text
-*.rda    binary
+*.csv             text
+*.rda             binary
 
-DESCRIPTION    text
-LICENSE        text
-NAMESPACE      text
+DESCRIPTION       text
+LICENSE           text
+NAMESPACE         text
+
+CITATION          text
+CITATION.cff      text
 
 .gitattributes    text
 .gitignore        text
+.Rbuildignore     text
