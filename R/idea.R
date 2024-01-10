@@ -1,11 +1,11 @@
-#' IDEA method
+#' Incidence Decay and Exponential Adjustment (IDEA)
 #'
 #' This function implements a least squares estimation method of R0 due to
 #' Fisman et al. (PloS One, 2013). See details for implementation notes.
 #'
-#' This method is closely related to that implemented in \code{ID}. The method
-#' is based on an incidence decay model. The estimate of R0 is the value which
-#' minimizes the sum of squares between observed case counts and cases counts
+#' This method is closely related to that implemented in [id()]. The method is
+#' based on an incidence decay model. The estimate of R0 is the value which
+#' minimizes the sum of squares between observed case counts and case counts
 #' expected under the model.
 #'
 #' This method is based on an approximation of the SIR model, which is most
@@ -15,42 +15,42 @@
 #' is strongly recommended. Users should be careful about units of time (e.g.,
 #' are counts observed daily or weekly?) when implementing.
 #'
-#' @param NT Vector of case counts.
-#' @param mu Mean of the serial distribution. This needs to match case counts in
-#'           time units. For example, if case counts are weekly and the serial
-#'           distribution has a mean of seven days, then \code{mu} should be set
-#'           to one. If case counts are daily and the serial distribution has a
-#'           mean of seven days, then \code{mu} should be set to seven.
+#' @param cases Vector of case counts. The vector must be of length at least two
+#'   and only contain positive integers.
+#' @param mu Mean of the serial distribution. This must be a positive number.
+#'   The value should match the case counts in time units. For example, if case
+#'   counts are weekly and the serial distribution has a mean of seven days,
+#'   then `mu` should be set to `1`. If case counts are daily and the serial
+#'   distribution has a mean of seven days, then `mu` should be set to `7`.
 #'
-#' @return \code{IDEA} returns a single value, the estimate of R0.
+#' @return An estimate of the basic reproduction number (R0).
+#'
+#' @references
+#' [Fisman et al. (PloS One, 2013)](
+#' https://doi.org/10.1371/journal.pone.0083622)
+#'
+#' @seealso [id()] for a similar method.
+#'
+#' @export
 #'
 #' @examples
 #' # Weekly data.
-#' NT <- c(1, 4, 10, 5, 3, 4, 19, 3, 3, 14, 4)
+#' cases <- c(1, 4, 10, 5, 3, 4, 19, 3, 3, 14, 4)
 #'
 #' # Obtain R0 when the serial distribution has a mean of five days.
-#' IDEA(NT, mu = 5 / 7)
+#' idea(cases, mu = 5 / 7)
 #'
 #' # Obtain R0 when the serial distribution has a mean of three days.
-#' IDEA(NT, mu = 3 / 7)
-#'
-#' @export
-IDEA <- function(NT, mu) {
-  if (length(NT) < 2)
-    print("Warning: length of NT should be at least two.")
-  else {
-    NT <- as.numeric(NT)
-    TT <- length(NT)
-    s <- (1:TT) / mu
+#' idea(cases, mu = 3 / 7)
+idea <- function(cases, mu) {
+  s <- seq_along(cases) / mu
 
-    y1 <- log(NT) / s
-    y2 <- s^2
-    y3 <- log(NT)
+  x1 <- sum(s)
+  x2 <- sum(s^2)
+  x3 <- log(cases)
 
-    IDEA1 <- sum(y2) * sum(y1) - sum(s) * sum(y3)
-    IDEA2 <- TT * sum(y2) - sum(s)^2
-    IDEA <- exp(IDEA1 / IDEA2)
+  y1 <- x2 * sum(x3 / s) - x1 * sum(x3)
+  y2 <- x2 * length(cases) - x1^2
 
-    return(IDEA)
-  }
+  exp(y1 / y2)
 }

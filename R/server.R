@@ -303,10 +303,10 @@ eval_estimator <- function(input, output, estimator, dataset) {
                            kappa = estimator$kappa)$Rhat, 2)
   # Incidence Decay
   else if (estimator$method == "ID")
-    estimate <- round(ID(unlist(dataset[3]), mu = serial), 2)
+    estimate <- round(id(unlist(dataset[3]), mu = serial), 2)
   # Incidence Decay with Exponential Adjustement
   else if (estimator$method == "IDEA")
-    estimate <- round(IDEA(unlist(dataset[3]), mu = serial), 2)
+    estimate <- round(idea(unlist(dataset[3]), mu = serial), 2)
 
   return(estimate)
 }
