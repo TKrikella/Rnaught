@@ -299,8 +299,8 @@ eval_estimator <- function(input, output, estimator, dataset) {
   }
   # Sequential Bayes
   else if (estimator$method == "seqB")
-    estimate <- round(seqB(unlist(dataset[3]), mu = serial,
-                           kappa = estimator$kappa)$Rhat, 2)
+    estimate <- round(seq_bayes(unlist(dataset[3]), mu = serial,
+                           kappa = estimator$kappa), 2)
   # Incidence Decay
   else if (estimator$method == "ID")
     estimate <- round(id(unlist(dataset[3]), mu = serial), 2)
