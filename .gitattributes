@@ -2,6 +2,7 @@
 
 *.R               text
 *.Rd              text
+*.Rmd             text
 
 *.csv             text
 *.rda             binary
