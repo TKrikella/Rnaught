@@ -90,3 +90,7 @@ estimate == sum(posterior$supp * posterior$pmf)
 \references{
 \href{https://doi.org/10.1371/journal.pone.0002185}{Bettencourt and Riberio (PloS One, 2008)}
 }
+\seealso{
+\code{vignette("seq_bayes_post", package = "Rnaught")} for examples of
+using the posterior distribution.
+}

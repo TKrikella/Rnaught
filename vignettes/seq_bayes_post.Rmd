@@ -1,0 +1,80 @@
+---
+title: "Sequential Bayes: Utilizing the Posterior Distribution"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sequential Bayes: Utilizing the Posterior Distribution}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+library(Rnaught)
+```
+
+In the Sequential Bayes method, the probability distribution of R0 is updated
+sequentially from one case count to the next, starting from a (discretized) uniform prior. By
+default, the function `seq_bayes` returns the mean of the last updated posterior
+distribution as its estimate of R0. However, by setting the parameter `post` to
+`TRUE`, it is possible to return the final distribution itself:
+
+```{r}
+# Daily case counts.
+cases <- c(1, 4, 10, 5, 3, 4, 19, 3, 3, 14, 4)
+
+posterior <- seq_bayes(cases, mu = 8, kappa = 7, post = TRUE)
+```
+
+First, the distribution can be used to retrieve the original estimate (had
+`post` been left to its default value of `FALSE`) by calculating its mean:
+
+```{r}
+# `supp` is the support of the distribution, and `pmf` is its probability mass
+# function.
+post_mean <- sum(posterior$supp * posterior$pmf)
+post_mean
+
+# Verify that the following is true:
+post_mean == seq_bayes(cases, mu = 8, kappa = 7)
+```
+
+Another use of the posterior is to obtain an alternative estimate of R0. For
+instance, the following extracts the posterior mode rather than the mean:
+
+```{r}
+post_mode <- posterior$supp[which.max(posterior$pmf)]
+post_mode
+```
+
+Returning the posterior is suitable for visualization purposes. Below is a graph
+containing the uniform prior, final posterior distribution, posterior mean and
+posterior mode:
+
+```{r, dpi = 192, echo = FALSE}
+par(mar = c(4.1, 4.1, 0.5, 0.5))
+
+# Posterior.
+plot(posterior$supp, posterior$pmf, xlab = "x", ylab = "p(x)",
+  col = "black", lty = 1, type = "l"
+)
+# Uniform prior.
+segments(x0 = 0, x1 = 7, y0 = 1 / (7 / 0.01 + 1), y1 = 1 / (7 / 0.01 + 1),
+  col = "orange"
+)
+# Posterior mean.
+abline(v = post_mean, col = "blue", lty = 2)
+# Posterior mode.
+abline(v = post_mode, col = "red", lty = 2)
+
+legend("topright",
+  legend = c("Prior", "Posterior", "Posterior mean", "Posterior mode"),
+  col = c("orange", "black", "blue", "red"),
+  lty = c(1, 1, 2, 2), cex = 0.5
+)
+```
