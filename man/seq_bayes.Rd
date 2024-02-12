@@ -30,7 +30,7 @@ If \code{post} is identical to \code{TRUE}, a list containing the following
 components is returned:
 \itemize{
 \item \code{supp} - the support of the posterior distribution of R0
-\item \code{pmf} - the probability mass function of the posterior distribution
+\item \code{pmf} - the probability mass function of the posterior distribution of R0
 }
 
 Otherwise, if \code{post} is identical to \code{FALSE}, only the estimate of R0 is
@@ -80,9 +80,13 @@ seq_bayes(cases, mu = 3 / 7)
 # believed to be at most 4.
 estimate <- seq_bayes(cases, mu = 1, kappa = 4)
 
-# Same as above, but return the posterior distribution instead of the
+# Same as above, but return the posterior distribution of R0 instead of the
 # estimate.
 posterior <- seq_bayes(cases, mu = 1, kappa = 4, post = TRUE)
+
+# Display the support and probability mass function of the posterior.
+posterior$supp
+posterior$pmf
 
 # Note that the following always holds:
 estimate == sum(posterior$supp * posterior$pmf)

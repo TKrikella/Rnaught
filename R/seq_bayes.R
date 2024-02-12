@@ -45,7 +45,7 @@
 #' @return If `post` is identical to `TRUE`, a list containing the following
 #'   components is returned:
 #'   * `supp` - the support of the posterior distribution of R0
-#'   * `pmf` - the probability mass function of the posterior distribution
+#'   * `pmf` - the probability mass function of the posterior distribution of R0
 #'
 #'   Otherwise, if `post` is identical to `FALSE`, only the estimate of R0 is
 #'   returned. Note that the estimate is equal to `sum(supp * pmf)` (i.e., the
@@ -74,9 +74,13 @@
 #' # believed to be at most 4.
 #' estimate <- seq_bayes(cases, mu = 1, kappa = 4)
 #'
-#' # Same as above, but return the posterior distribution instead of the
+#' # Same as above, but return the posterior distribution of R0 instead of the
 #' # estimate.
 #' posterior <- seq_bayes(cases, mu = 1, kappa = 4, post = TRUE)
+#'
+#' # Display the support and probability mass function of the posterior.
+#' posterior$supp
+#' posterior$pmf
 #'
 #' # Note that the following always holds:
 #' estimate == sum(posterior$supp * posterior$pmf)
