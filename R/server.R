@@ -110,7 +110,7 @@ server <- function(input, output) {
       if (!is.na(serial)) {
         reactive$estimators[[length(reactive$estimators) + 1]] <- list(
           method = "WP", mu = serial, mu_units = input$serialWPUnits,
-          search = list(B = 100, shape.max = 10, scale.max = 10))
+          grid_length = 100, max_shape = 10, max_scale = 10)
         reactive$est_table <- update_est_col(input, output, reactive$data_table,
           reactive$estimators[[length(reactive$estimators)]],
           reactive$est_table)
@@ -153,8 +153,7 @@ server <- function(input, output) {
       if (checks_passed) {
         reactive$estimators[[length(reactive$estimators) + 1]] <- list(
           method = "WP", mu = NA, mu_units = input$serialWPUnits,
-          search = list(B = grid_length, shape.max = max_shape,
-                        scale.max = max_scale))
+          grid_length = grid_length, max_shape = max_shape, max_scale = max_scale)
         reactive$est_table <- update_est_col(input, output, reactive$data_table,
           reactive$estimators[[length(reactive$estimators)]],
           reactive$est_table)
@@ -279,12 +278,15 @@ eval_estimator <- function(input, output, estimator, dataset) {
   else if (estimator$mu_units == "Weeks" && dataset[2] == "Daily")
     serial <- serial * 7
 
-  # White and Panago
+  # White and Pagano
   if (estimator$method == "WP") {
-    estimate <- WP(unlist(dataset[3]), mu = serial, search = estimator$search)
+    estimate <- wp(unlist(dataset[3]), mu = serial, serial = TRUE,
+                   grid_length = estimator$grid_length,
+                   max_shape = estimator$max_shape,
+                   max_scale = estimator$max_scale)
 
     if (!is.na(estimator$mu))
-      estimate <- round(estimate$Rhat, 2)
+      estimate <- round(estimate$r0, 2)
     # Display the estimated mean of the serial distribution if mu was not
     # specified.
     else {
@@ -292,8 +294,8 @@ eval_estimator <- function(input, output, estimator, dataset) {
         mu_units <- "days"
       else
         mu_units <- "weeks"
-      MSI <- sum(estimate$SD$supp * estimate$SD$pmf)
-      estimate <- shiny::HTML(paste0(round(estimate$Rhat, 2), "<br/>(&mu; = ",
+      MSI <- sum(estimate$supp * estimate$pmf)
+      estimate <- shiny::HTML(paste0(round(estimate$r0, 2), "<br/>(&mu; = ",
                                      round(MSI, 2), " ", mu_units, ")"))
     }
   }

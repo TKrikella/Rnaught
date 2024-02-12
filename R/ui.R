@@ -90,10 +90,10 @@ est_sidebar <- function() {
   )
 }
 
-# Collapsable entry for White & Panago (WP) method.
+# Collapsable entry for White & Pagano (WP) method.
 WP_collapse <- function() {
   shiny::tags$details(
-    shiny::tags$summary(shiny::h4("White & Panago (WP)")),
+    shiny::tags$summary(shiny::h4("White & Pagano (WP)")),
     shiny::p("Method due to White and Pagano (2008), assumes a branching process
              based model. Serial distribution can be assumed known or can be
              estimated using maximum likelihood;  When serial interval is

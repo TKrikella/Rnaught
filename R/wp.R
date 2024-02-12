@@ -1,4 +1,4 @@
-#' WP method
+#' White and Pagano (WP)
 #'
 #' This function implements an R0 estimation due to White and Pagano (Statistics
 #' in Medicine, 2008). The method is based on maximum likelihood estimation in a
@@ -6,224 +6,218 @@
 #'
 #' This method is based on a Poisson transmission model, and hence may be most
 #' most valid at the beginning of an epidemic. In their model, the serial
-#' distribution is assumed to be discrete with a finite number of posible
-#' values. In this implementation, if \code{mu} is not {NA}, the serial
-#' distribution is taken to be a discretized version of a gamma distribution
-#' with mean \code{mu}, shape parameter one, and largest possible value based on
-#' parameter \code{tol}. When \code{mu} is \code{NA}, the function implements a
-#' grid search algorithm to find the maximum likelihood estimator over all
-#' possible gamma distributions with unknown mean and variance, restricting
-#' these to a prespecified grid (see \code{search} parameter).
+#' distribution is assumed to be discrete with a finite number of possible
+#' values. In this implementation, if `mu` is not `NA`, the serial distribution
+#' is taken to be a discretized version of a gamma distribution with shape
+#' parameter `1` and scale parameter `mu` (and hence mean `mu`). When `mu` is
+#' `NA`, the function implements a grid search algorithm to find the maximum
+#' likelihood estimator over all possible gamma distributions with unknown shape
+#' and scale, restricting these to a prespecified grid (see the parameters
+#' `grid_length`, `max_shape` and `max_scale`). In both cases, the largest value
+#' of the support is chosen such that the cumulative distribution function of
+#' the original (pre-discretized) gamma distribution has cumulative probability
+#' of no more than 0.999 at this value.
 #'
-#' When the serial distribution is known (i.e., \code{mu} is not \code{NA}),
-#' sensitivity testing of \code{mu} is strongly recommended. If the serial
-#' distribution is unknown (i.e., \code{mu} is \code{NA}), the likelihood
-#' function can be flat near the maximum, resulting in numerical instability of
-#' the optimizer. When \code{mu} is \code{NA}, the implementation takes
-#' considerably longer to run. Users should be careful about units of time
-#' (e.g., are counts observed daily or weekly?) when implementing.
+#' When the serial distribution is known (i.e., `mu` is not `NA`), sensitivity
+#' testing of `mu` is strongly recommended. If the serial distribution is
+#' unknown (i.e., `mu` is `NA`), the likelihood function can be flat near the
+#' maximum, resulting in numerical instability of the optimizer. When `mu` is
+#' `NA`, the implementation takes considerably longer to run. Users should be
+#' careful about units of time (e.g., are counts observed daily or weekly?) when
+#' implementing.
 #'
 #' The model developed in White and Pagano (2008) is discrete, and hence the
 #' serial distribution is finite discrete. In our implementation, the input
-#' value \code{mu} is that of a continuous distribution. The algorithm
-#' discretizes this input when \code{mu} is not \code{NA}, and hence the mean of
-#' the serial distribution returned in the list \code{SD} will differ from
-#' \code{mu} somewhat. That is to say, if the user notices that the input
-#' \code{mu} and output mean of \code{SD} are different, this is to be expected,
-#' and is caused by the discretization.
+#' value `mu` is that of a continuous distribution. The algorithm discretizes
+#' this input, and so the mean of the estimated serial distribution returned
+#' (when `serial` is set to `TRUE`) will differ from `mu` somewhat. That is to
+#' say, if the user notices that the input `mu` and the mean of the estimated
+#' serial distribution are different, this is to be expected, and is caused by
+#' the discretization.
 #'
-#' @param NT Vector of case counts.
-#' @param mu Mean of the serial distribution (needs to match case counts in time
-#'           units; for example, if case counts are weekly and the serial
-#'           distribution has a mean of seven days, then \code{mu} should be set
-#'           to one). The default value of \code{mu} is set to \code{NA}.
-#' @param search List of default values for the grid search algorithm. The list
-#'               includes three elements: the first is \code{B}, which is the
-#'               length of the grid in one dimension; the second is
-#'               \code{scale.max}, which is the largest possible value of the
-#'               scale parameter; and the third is \code{shape.max}, which is
-#'               the largest possible value of the shape parameter. Defaults to
-#'               \code{B = 100, scale.max = 10, shape.max = 10}. For both shape
-#'               and scale, the smallest possible value is 1/\code{B}.
-#' @param tol Cutoff value for cumulative distribution function of the
-#'            pre-discretization gamma serial distribution. Defaults to 0.999
-#'            (i.e. in the discretization, the maximum is chosen such that the
-#'            original gamma distribution has cumulative probability of no more
-#'            than 0.999 at this maximum).
+#' @param cases Vector of case counts. The vector must be of length at least two
+#'   and only contain positive integers.
+#' @param mu Mean of the serial distribution. This must be a positive number or
+#'   `NA`. If a number is specified, the value should match the case counts in
+#'   time units. For example, if case counts are weekly and the serial
+#'   distribution has a mean of seven days, then `mu` should be set to `1`. If
+#'   case counts are daily and the serial distribution has a mean of seven days,
+#'   then `mu` should be set to `7`.
+#' @param serial Whether to return the estimated serial distribution in addition
+#'   to the estimate of R0. This must be a value identical to `TRUE` or `FALSE`.
+#' @param grid_length The length of the grid in the grid search (defaults to
+#'   100). This must be a positive integer. It will only be used if `mu` is set
+#'   to `NA`. The grid search will go through all combinations of the shape and
+#'   scale parameters for the gamma distribution, which are `grid_length` evenly
+#'   spaced values from `0` (exclusive) to `max_shape` and `max_scale`
+#'   (inclusive), respectively. Note that larger values will result in a longer
+#'   search time.
+#' @param max_shape The largest possible value of the shape parameter in the
+#'   grid search (defaults to 10). This must be a positive number. It will only
+#'   be used if `mu` is set to `NA`. Note that larger values will result in a
+#'   longer search time, and may cause numerical instabilities.
+#' @param max_scale The largest possible value of the scale parameter in the
+#'   grid search (defaults to 10). This must be a positive number. It will only
+#'   be used if `mu` is set to `NA`. Note that larger values will result in a
+#'   longer search time, and may cause numerical instabilities.
 #'
-#' @return \code{WP} returns a list containing the following components:
-#'         \code{Rhat} is the estimate of R0, and \code{SD} is either the
-#'         discretized serial distribution (if \code{mu} is not \code{NA}), or
-#'         the estimated discretized serial distribution (if \code{mu} is
-#'         \code{NA}). The list also returns the variable \code{check}, which is
-#'         equal to the number of non-unique maximum likelihood estimators. The
-#'         serial distribution \code{SD} is returned as a list made up of
-#'         \code{supp} (the support of the distribution) and \code{pmf} (the
-#'         probability mass function).
+#' @return If `serial` is identical to `TRUE`, a list containing the following
+#'   components is returned:
+#'   * `r0` - the estimate of R0
+#'   * `supp` - the support of the estimated serial distribution
+#'   * `pmf` - the probability mass function of the estimated serial
+#'     distribution
+#'
+#'   Otherwise, if `serial` is identical to `FALSE`, only the estimate of R0 is
+#'   returned.
+#'
+#' @references
+#' [White and Pagano (Statistics in Medicine, 2008)](
+#' https://doi.org/10.1002/sim.3136)
+#'
+#' @importFrom stats pgamma qgamma
+#'
+#' @export
 #'
 #' @examples
 #' # Weekly data.
-#' NT <- c(1, 4, 10, 5, 3, 4, 19, 3, 3, 14, 4)
+#' cases <- c(1, 4, 10, 5, 3, 4, 19, 3, 3, 14, 4)
 #'
 #' # Obtain R0 when the serial distribution has a mean of five days.
-#' res1 <- WP(NT, mu = 5 / 7)
-#' res1$Rhat
+#' wp(cases, mu = 5 / 7)
 #'
 #' # Obtain R0 when the serial distribution has a mean of three days.
-#' res2 <- WP(NT, mu = 3 / 7)
-#' res2$Rhat
+#' wp(cases, mu = 3 / 7)
 #'
 #' # Obtain R0 when the serial distribution is unknown.
-#' # NOTE: This implementation will take longer to run.
-#' res3 <- WP(NT)
-#' res3$Rhat
+#' # Note that this will take longer to run than when `mu` is known.
+#' wp(cases)
 #'
-#' # Find the mean of the estimated serial distribution.
-#' serial <- res3$SD
-#' sum(serial$supp * serial$pmf)
+#' # Same as above, but specify custom grid search parameters. The larger any of
+#' # the parameters, the longer the search will take, but with potentially more
+#' # accurate estimates.
+#' wp(cases, grid_length = 40, max_shape = 4, max_scale = 4)
 #'
-#' @importFrom stats pexp qexp
+#' # Return the estimated serial distribution in addition to the estimate of R0.
+#' estimate <- wp(cases, serial = TRUE)
 #'
-#' @export
-WP <- function(NT, mu = NA,
-               search = list(B = 100, shape.max = 10, scale.max = 10),
-               tol = 0.999) {
+#' # Display the estimate of R0, as well as the support and probability mass
+#' # function of the estimated serial distribution returned by the grid search.
+#' estimate$r0
+#' estimate$supp
+#' estimate$pmf
+wp <- function(cases, mu = NA, serial = FALSE,
+               grid_length = 100, max_shape = 10, max_scale = 10) {
   if (is.na(mu)) {
-    print("You have assumed that the serial distribution is unknown.")
-    res <- WP_unknown(NT, B = search$B, shape.max = search$shape.max,
-                      scale.max = search$scale.max, tol = tol)
-    Rhat <- res$Rhat
-    p <- res$p
-    range.max <- res$range.max
-    JJ <- res$JJ
+    search <- wp_search(cases, grid_length, max_shape, max_scale)
+    r0 <- search$r0
+    serial_supp <- search$supp
+    serial_pmf <- search$pmf
   } else {
-    print("You have assumed that the serial distribution is known.")
-    range.max <- ceiling(qexp(tol, rate = 1 / mu))
-    p <- diff(pexp(0:range.max, 1 / mu))
-    p <- p / sum(p)
-    res <- WP_known(NT = NT, p = p)
-    Rhat <- res
-    JJ <- NA
+    max_range <- ceiling(qgamma(0.999, shape = 1, scale = mu))
+    serial_supp <- seq_len(max_range)
+    serial_pmf <- diff(pgamma(0:max_range, shape = 1, scale = mu))
+    serial_pmf <- serial_pmf / sum(serial_pmf)
+    r0 <- sum(cases[-1]) / sum(wp_mu_t_sigma(cases, serial_pmf))
   }
 
-  return(list(Rhat = Rhat,
-              check = length(JJ),
-              SD = list(supp = 1:range.max, pmf = p)))
-}
-
-#' WP method background function WP_known
-#'
-#' This is a background/internal function called by \code{WP}. It computes the
-#' maximum likelihood estimator of R0 assuming that the serial distribution is
-#' known and finite discrete.
-#'
-#' @param NT Vector of case counts.
-#' @param p Discretized version of the serial distribution.
-#'
-#' @return The function returns the maximum likelihood estimator of R0.
-#'
-#' @noRd
-WP_known <- function(NT, p) {
-  k <- length(p)
-  TT <- length(NT) - 1
-  mu_t <- rep(0, TT)
-
-  for (i in 1:TT) {
-    Nt <- NT[i:max(1, i - k + 1)]
-    mu_t[i] <- sum(p[1:min(k, i)] * Nt)
+  if (!serial) {
+    return(r0)
   }
-
-  Rhat <- sum(NT[-1]) / sum(mu_t)
-  return(Rhat)
+  list(r0 = r0, supp = serial_supp, pmf = serial_pmf)
 }
 
-#' WP method background function WP_unknown
+#' White and Pagano (WP) Grid Search
 #'
-#' This is a background/internal function called by \code{WP}. It computes the
+#' This is a background/internal function called by [wp()]. It computes the
 #' maximum likelihood estimator of R0 assuming that the serial distribution is
-#' unknown but comes from a discretized gamma distribution. The function then
-#' implements a simple grid search algorithm to obtain the maximum likelihood
-#' estimator of R0 as well as the gamma parameters.
+#' unknown (i.e., [wp()] is called with `mu` set to `NA`) but comes from a
+#' discretized gamma distribution. The function implements a simple grid search
+#' to obtain the maximum likelihood estimator of R0 as well as the gamma
+#' parameters.
 #'
-#' @param NT Vector of case counts.
-#' @param B Length of grid for shape and scale (grid search parameter).
-#' @param shape.max Maximum shape value (grid \code{search} parameter).
-#' @param scale.max Maximum scale value (grid \code{search} parameter).
-#' @param tol cutoff value for cumulative distribution function of the serial
-#'            distribution (defaults to 0.999).
+#' @param cases Vector of case counts.
+#' @param grid_length The length of the grid in the grid search.
+#' @param max_shape The largest possible value of the shape parameter in the
+#'   grid search.
+#' @param max_scale The largest possible value of the scale parameter in the
+#'   grid search.
 #'
-#' @return The function returns \code{Rhat}, the maximum likelihood estimator of
-#'         R0, as well as the maximum likelihood estimator of the discretized
-#'         serial distribution given by \code{p} (the probability mass function)
-#'         and \code{range.max} (the distribution has support on the integers
-#'         one to \code{range.max}). The function also returns \code{resLL} (all
-#'         values of the log-likelihood) at \code{shape} (grid for shape
-#'         parameter) and at \code{scale} (grid for scale parameter), as well as
-#'         \code{resR0} (the full vector of maximum likelihood estimators),
-#'         \code{JJ} (the locations for the likelihood for these), and \code{J0}
-#'         (the location for the maximum likelihood estimator \code{Rhat}). If
-#'         \code{JJ} and \code{J0} are not the same, this means that the maximum
-#'         likelihood estimator is not unique.
+#' @return A list containing the following components is returned:
+#'   * `r0` - the estimate of R0
+#'   * `supp` - the support of the estimated serial distribution
+#'   * `pmf` - the probability mass function of the estimated serial
+#'     distribution
+#'
+#' @references
+#' [White and Pagano (Statistics in Medicine, 2008)](
+#' https://doi.org/10.1002/sim.3136)
+#'
+#' @seealso [wp()] for the function in which this grid search is called.
 #'
 #' @importFrom stats pgamma qgamma
 #'
 #' @noRd
-WP_unknown <- function(NT, B = 100, shape.max = 10, scale.max = 10,
-                       tol = 0.999) {
-  shape <- seq(0, shape.max, length.out = B + 1)
-  scale <- seq(0, scale.max, length.out = B + 1)
-  shape <- shape[-1]
-  scale <- scale[-1]
+wp_search <- function(cases, grid_length, max_shape, max_scale) {
+  shapes <- seq(0, max_shape, length.out = grid_length + 1)[-1]
+  scales <- seq(0, max_scale, length.out = grid_length + 1)[-1]
 
-  resLL <- matrix(0, B, B)
-  resR0 <- matrix(0, B, B)
+  best_log_like <- -Inf
+  best_serial_pmf <- NA
+  best_max_range <- NA
+  r0 <- NA
 
-  for (i in 1:B)
-    for (j in 1:B) {
-      range.max <- ceiling(qgamma(tol, shape = shape[i], scale = scale[j]))
-      p <- diff(pgamma(0:range.max, shape = shape[i], scale = scale[j]))
-      p <- p / sum(p)
-      mle <- WP_known(NT, p)
-      resLL[i, j] <- computeLL(p, NT, mle)
-      resR0[i, j] <- mle
+  for (i in seq_len(grid_length)) {
+    for (j in seq_len(grid_length)) {
+      max_range <- ceiling(qgamma(0.999, shape = shapes[i], scale = scales[j]))
+
+      serial_pmf <- diff(
+        pgamma(0:max_range, shape = shapes[i], scale = scales[j])
+      )
+      serial_pmf <- serial_pmf / sum(serial_pmf)
+
+      mu_t_sigma <- wp_mu_t_sigma(cases, serial_pmf)
+      mle <- sum(cases[-1]) / sum(mu_t_sigma)
+      mu_t <- mle * mu_t_sigma
+
+      log_like <- sum(cases[-1] * log(mu_t)) - sum(mu_t)
+      if (log_like > best_log_like) {
+        best_log_like <- log_like
+        best_serial_pmf <- serial_pmf
+        best_max_range <- max_range
+        r0 <- mle
+      }
     }
-
-  J0 <- which.max(resLL)
-  R0hat <- resR0[J0]
-  JJ <- which(resLL == resLL[J0], arr.ind = TRUE)
-  range.max <- ceiling(qgamma(tol, shape = shape[JJ[1]], scale = scale[JJ[2]]))
-  p <- diff(pgamma(0:range.max, shape = shape[JJ[1]], scale = scale[JJ[2]]))
-  p <- p / sum(p)
-
-  return(list(Rhat = R0hat, J0 = J0, ll = resLL, Rs = resR0, scale = scale,
-              shape = shape, JJ = JJ, p = p, range.max = range.max))
-}
-
-#' WP method background function computeLL
-#'
-#' This is a background/internal function called by \code{WP}. It computes the
-#' log-likelihood.
-#'
-#' @param p Discretized version of the serial distribution.
-#' @param NT Vector of case counts.
-#' @param R0 Basic reproductive ratio.
-#'
-#' @return This function returns the log-likelihood at the input variables and
-#'         parameters.
-#'
-#' @noRd
-computeLL <- function(p, NT, R0) {
-  k <- length(p)
-  TT <- length(NT) - 1
-  mu_t <- rep(0, TT)
-
-  for (i in 1:TT) {
-    Nt <- NT[i:max(1, i - k + 1)]
-    mu_t[i] <- sum(p[1:min(k, i)] * Nt)
   }
 
-  mu_t <- R0 * mu_t
-  LL <- sum(NT[-1] * log(mu_t)) - sum(mu_t)
+  list(r0 = r0, supp = seq_len(best_max_range), pmf = best_serial_pmf)
+}
 
-  return(LL)
+#' White and Pagano (WP) Mu Function Helper
+#'
+#' This is a background/internal function called by [wp()] and [wp_search()]. It
+#' computes the sum inside the function `mu(t)`, which is present in the log
+#' likelihood function. See the referenced article for more details.
+#'
+#' @param cases Vector of case counts.
+#' @param serial_pmf The probability mass function of the serial distribution.
+#'
+#' @return The sum inside the function `mu(t)` of the log likelihood.
+#'
+#' @references
+#' [White and Pagano (Statistics in Medicine, 2008)](
+#' https://doi.org/10.1002/sim.3136)
+#'
+#' @seealso [wp()] and [wp_search()] for the functions which require this sum.
+#'
+#' @noRd
+wp_mu_t_sigma <- function(cases, serial_pmf) {
+  mu_t_sigma <- rep(0, length(cases) - 1)
+  for (i in seq_len(length(cases) - 1)) {
+    mu_t_sigma[i] <- sum(
+      serial_pmf[seq_len(min(length(serial_pmf), i))] *
+        cases[i:max(1, i - length(serial_pmf) + 1)]
+    )
+  }
+  mu_t_sigma
 }
