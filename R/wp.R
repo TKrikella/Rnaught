@@ -75,6 +75,9 @@
 #' [White and Pagano (Statistics in Medicine, 2008)](
 #' https://doi.org/10.1002/sim.3136)
 #'
+#' @seealso `vignette("wp_serial", package="Rnaught")` for examples of using the
+#'   serial distribution.
+#'
 #' @importFrom stats pgamma qgamma
 #'
 #' @export
