@@ -25,8 +25,7 @@
 #'
 #' @return An estimate of the basic reproduction number (R0).
 #'
-#' @references
-#' [Fisman et al. (PloS One, 2013)](
+#' @references [Fisman et al. (PloS One, 2013)](
 #' https://doi.org/10.1371/journal.pone.0083622)
 #'
 #' @seealso [id()] for a similar method.

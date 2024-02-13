@@ -17,15 +17,16 @@ wp(
 \item{cases}{Vector of case counts. The vector must be of length at least two
 and only contain positive integers.}
 
-\item{mu}{Mean of the serial distribution. This must be a positive number or
-\code{NA}. If a number is specified, the value should match the case counts in
-time units. For example, if case counts are weekly and the serial
-distribution has a mean of seven days, then \code{mu} should be set to \code{1}. If
-case counts are daily and the serial distribution has a mean of seven days,
-then \code{mu} should be set to \code{7}.}
+\item{mu}{Mean of the serial distribution (defaults to \code{NA}). This must be a
+positive number or \code{NA}. If a number is specified, the value should match
+the case counts in time units. For example, if case counts are weekly and
+the serial distribution has a mean of seven days, then \code{mu} should be set
+to \code{1}. If case counts are daily and the serial distribution has a mean of
+seven days, then \code{mu} should be set to \code{7}.}
 
 \item{serial}{Whether to return the estimated serial distribution in addition
-to the estimate of R0. This must be a value identical to \code{TRUE} or \code{FALSE}.}
+to the estimate of R0 (defaults to \code{FALSE}). This must be a value identical
+to \code{TRUE} or \code{FALSE}.}
 
 \item{grid_length}{The length of the grid in the grid search (defaults to
 100). This must be a positive integer. It will only be used if \code{mu} is set
@@ -125,4 +126,8 @@ estimate$pmf
 }
 \references{
 \href{https://doi.org/10.1002/sim.3136}{White and Pagano (Statistics in Medicine, 2008)}
+}
+\seealso{
+\code{vignette("wp_serial", package="Rnaught")} for examples of using the
+serial distribution.
 }

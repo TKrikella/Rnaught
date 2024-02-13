@@ -51,8 +51,7 @@
 #'   returned. Note that the estimate is equal to `sum(supp * pmf)` (i.e., the
 #'   posterior mean).
 #'
-#' @references
-#' [Bettencourt and Riberio (PloS One, 2008)](
+#' @references [Bettencourt and Riberio (PloS One, 2008)](
 #' https://doi.org/10.1371/journal.pone.0002185)
 #'
 #' @seealso `vignette("seq_bayes_post", package = "Rnaught")` for examples of

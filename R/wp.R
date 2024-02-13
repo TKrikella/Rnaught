@@ -37,14 +37,15 @@
 #'
 #' @param cases Vector of case counts. The vector must be of length at least two
 #'   and only contain positive integers.
-#' @param mu Mean of the serial distribution. This must be a positive number or
-#'   `NA`. If a number is specified, the value should match the case counts in
-#'   time units. For example, if case counts are weekly and the serial
-#'   distribution has a mean of seven days, then `mu` should be set to `1`. If
-#'   case counts are daily and the serial distribution has a mean of seven days,
-#'   then `mu` should be set to `7`.
+#' @param mu Mean of the serial distribution (defaults to `NA`). This must be a
+#'   positive number or `NA`. If a number is specified, the value should match
+#'   the case counts in time units. For example, if case counts are weekly and
+#'   the serial distribution has a mean of seven days, then `mu` should be set
+#'   to `1`. If case counts are daily and the serial distribution has a mean of
+#'   seven days, then `mu` should be set to `7`.
 #' @param serial Whether to return the estimated serial distribution in addition
-#'   to the estimate of R0. This must be a value identical to `TRUE` or `FALSE`.
+#'   to the estimate of R0 (defaults to `FALSE`). This must be a value identical
+#'   to `TRUE` or `FALSE`.
 #' @param grid_length The length of the grid in the grid search (defaults to
 #'   100). This must be a positive integer. It will only be used if `mu` is set
 #'   to `NA`. The grid search will go through all combinations of the shape and
@@ -71,8 +72,7 @@
 #'   Otherwise, if `serial` is identical to `FALSE`, only the estimate of R0 is
 #'   returned.
 #'
-#' @references
-#' [White and Pagano (Statistics in Medicine, 2008)](
+#' @references [White and Pagano (Statistics in Medicine, 2008)](
 #' https://doi.org/10.1002/sim.3136)
 #'
 #' @seealso `vignette("wp_serial", package="Rnaught")` for examples of using the
