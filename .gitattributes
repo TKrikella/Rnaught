@@ -7,6 +7,8 @@
 *.csv             text
 *.rda             binary
 
+*.png             binary
+
 DESCRIPTION       text
 LICENSE           text
 NAMESPACE         text
