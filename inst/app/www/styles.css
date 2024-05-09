@@ -1,0 +1,26 @@
+body {
+  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+}
+
+noscript {
+  text-align: center;
+}
+
+.nav-pills .active {
+  color: white !important;
+}
+
+.action-button:hover, #bulk-help-toggle:hover, #data_export:hover {
+  color: white !important;
+}
+
+#data_plot {
+  margin-top: -0.5rem;
+}
+
+td.selected {
+  background-color: red;
+  color: white;
+}

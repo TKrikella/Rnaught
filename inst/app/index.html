@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{ bootstrapLib(theme = bslib::bs_theme(primary = "red")) }}
+    {{ headContent() }}
+    <title>Rnaught Web</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <!-- Enable tooltips. -->
+    <script>
+      $(document).ready(function(){
+        $('[data-bs-toggle="tooltip"]').tooltip();
+      });
+    </script>
+  </head>
+  <body class="d-flex flex-column h-100">
+    <noscript>
+      <strong>This application requires JavaScript.</strong>
+    </noscript>
+    {{ htmlTemplate("templates/navbar.html") }}
+    {{ htmlTemplate("templates/tabs.html") }}
+    {{ htmlTemplate("templates/content.html") }}
+    {{ htmlTemplate("templates/footer.html") }}
+  </body>
+</html>

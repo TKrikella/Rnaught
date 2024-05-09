@@ -1,0 +1,13 @@
+<nav class="nav nav-tabs">
+  <a class="nav-link active" data-bs-toggle="tab" href="#enter-data">Enter data</a>
+  <a class="nav-link" data-bs-toggle="tab" href="#view-data">View data</a>
+</nav>
+
+<div class="container-fluid tab-content">
+  <div id="enter-data" class="pt-3 tab-pane fade show active">
+    {{ htmlTemplate("templates/content/data/enter-data.html") }}
+  </div>
+  <div id="view-data" class="pt-3 tab-pane fade">
+    {{ htmlTemplate("templates/content/data/view-data.html") }}
+  </div>
+</div>

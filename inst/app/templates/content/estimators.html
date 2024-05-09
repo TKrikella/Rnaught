@@ -1,0 +1,13 @@
+<nav class="nav nav-tabs">
+  <a class="nav-link active" data-bs-toggle="tab" href="#add-estimators">Add estimators</a>
+  <a class="nav-link" data-bs-toggle="tab" href="#view-estimates">View estimates</a>
+</nav>
+
+<div class="container-fluid tab-content">
+  <div id="add-estimators" class="pt-3 tab-pane fade show active">
+    {{ htmlTemplate("templates/content/estimators/add-estimators.html") }}
+  </div>
+  <div id="view-estimates" class="pt-3 tab-pane fade">
+    {{ htmlTemplate("templates/content/estimators/view-estimates.html") }}
+  </div>
+</div>

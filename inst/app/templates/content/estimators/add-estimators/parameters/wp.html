@@ -1,0 +1,39 @@
+<!-- Radio buttons to specify whether the serial interval is known. -->
+<label class="form-label" for="wp_mu_known">Is the serial interval known?</label>
+<div class="shiny-input-radiogroup" id="wp_mu_known">
+  <div class="form-check form-check-inline">
+    <label class="form-check-label">
+      <input type="radio" class="form-check-input me-2" name="wp_mu_known" value="Yes" checked>Yes
+    </label>
+  </div>
+  <div class="form-check form-check-inline">
+    <label class="form-check-label">
+      <input type="radio" class="form-check-input me-2" name="wp_mu_known" value="No">No
+    </label>
+  </div>
+</div>
+<!-- Show the input field for the serial interval if it is known. -->
+<div data-display-if="input.wp_mu_known == 'Yes'" class="mt-2 mt-md-0">
+    {{ htmlTemplate("templates/content/estimators/add-estimators/components/mu.html", id = "wp") }}
+</div>
+<!-- Show the input fields for the grid search parameters if the serial interval is unknown. -->
+<div data-display-if="input.wp_mu_known == 'No'" class="row">
+  <!-- Grid length. -->
+  <div class="col-md mt-2 mt-md-0">
+    <label class="form-label" for="grid_length">Grid length</label>
+    <input name="grid_length" class="form-control" type="text" placeholder="Default: 100">
+    <small id="grid_length_warn" class="form-text text-primary shiny-text-output"></small>
+  </div>
+  <!-- Maximum shape. -->
+  <div class="col-md mt-2 mt-md-0">
+    <label class="form-label" for="max_shape">Maximum shape</label>
+    <input name="max_shape" class="form-control" type="text" placeholder="Default: 10">
+    <small id="max_shape_warn" class="form-text text-primary shiny-text-output"></small>
+  </div>
+  <!-- Grid length. -->
+  <div class="col-md mt-2 mt-md-0">
+    <label class="form-label" for="max_scale">Maximum scale</label>
+    <input name="max_scale" class="form-control" type="text" placeholder="Default: 10">
+    <small id="max_scale_warn" class="form-text text-primary shiny-text-output"></small>
+  </div>
+</div>

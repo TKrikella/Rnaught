@@ -1,0 +1,37 @@
+<h4 class="mb-3">Bulk entry</h4>
+<!-- Button to toggle help text. -->
+<button type="button" class="btn btn-outline-primary btn-sm" id="bulk-help-toggle"
+        data-bs-toggle="collapse" data-bs-target="#bulk-help">
+    Show required format
+</button>
+<!-- Help text for bulk input format. -->
+<div class="collapse mt-2" id="bulk-help">
+  <div class="card card-body border-primary">
+    <p>Enter one or more rows in the following format:</p>
+    <p class="overflow-x-scroll text-nowrap font-monospace">
+      <u>Dataset name</u>,<u>Time units</u>,<u>Case counts</u>
+    </p>
+    <p>
+      <u class="font-monospace">Time units</u> must be one of
+      <u class="font-monospace">Days</u> or 
+      <u class="font-monospace">Weeks</u>, and
+      <u class="font-monospace">Case counts</u>
+      must be a comma-separated list of one or more non-negative integers.
+    </p>
+    <p>Example:</p>
+    <p class="overflow-x-scroll text-nowrap font-monospace lh-sm">
+      Montreal,Days,1,2,3,4,5,6,7,8,9,19<br>
+      Ottawa,Weeks,1,2,3,4,5,6,7,8,9,19<br>
+      Toronto,Days,1,2,3,4,5,6,7,8,9,19
+    </p>
+  </div>
+</div>
+<!-- Data input area. -->
+<div>
+  <textarea id="data_area" class="form-control shiny-input-textarea my-3" rows="3" wrap="off"></textarea>
+  <small id="data_area_warn" class="form-text text-primary shiny-html-output"></small>
+</div>
+<!-- Submit data. -->
+<button id="data_bulk" type="button" class="btn btn-outline-primary btn-sm action-button">
+  <span class="glyphicon glyphicon-plus"></span> Add
+</button>

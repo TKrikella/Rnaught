@@ -1,0 +1,20 @@
+<!-- Serial interval label and help tooltip. -->
+<label class="form-label" for="mu_{{ id }}">
+  Serial interval (&#956;)
+  <sup data-bs-toggle="tooltip" data-bs-placement="right"
+       data-bs-title="The serial interval is the time between when an infected individual (the infector) becomes
+                      symptomatic, to when another individual (who is infected by the infector) becomes symptomatic.">
+    [?]
+  </sup>
+</label>
+<div class="input-group">
+  <!-- Serial interval input field. -->
+  <input name="mu_{{ id }}" class="form-control" type="text">
+  <!-- Days/weeks dropdown. -->
+  <select name="mu_{{ id }}_units" class="form-select">
+    <option value="Days" selected>Days</option>
+    <option value="Weeks">Weeks</option>
+  </select>
+</div>
+<!-- Warning text for incorrect values. -->
+<small id="mu_{{ id }}_warn" class="form-text text-primary shiny-text-output"></small>
