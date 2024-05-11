@@ -3,24 +3,24 @@
 \docType{data}
 \name{COVIDCanada}
 \alias{COVIDCanada}
-\title{COVID-19 Canada National Case Counts, 2020-2022}
+\title{COVID-19 Canada National Case Counts, 2020-2023}
 \format{
-A data frame with 1082 observations on 3 variables:
+A data frame with 1439 observations on 3 variables:
 \describe{
-  \item{date}{The date of reporting in YYYY-MM-DD format.}
-  \item{cases}{The daily number of cases.}
-  \item{cumulative_cases}{The cumulative number of cases.}
+\item{date}{The date of reporting in YYYY-MM-DD format.}
+\item{cases}{The daily number of cases.}
+\item{cumulative_cases}{The cumulative number of cases.}
 }
 }
 \source{
-\url{https://opencovid.ca}
+\url{https://github.com/ccodwg/CovidTimelineCanada}
 }
 \usage{
 COVIDCanada
 }
 \description{
 Daily national COVID-19 case counts in Canada, from the start of the pandemic
-until the end of 2022. Provided by the COVID-19 Canada Open Data Working
-Group.
+until the end of 2023. Retrieved from the COVID-19 Canada Open Data Working
+Group on 2024-05-11.
 }
 \keyword{datasets}
