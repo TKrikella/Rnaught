@@ -27,7 +27,7 @@ render_plot <- function(input, output) {
     counts <- tokenize_counts(input$data_counts)
     if (length(counts) > 0 && !anyNA(counts) && all(counts >= 0)) {
       output$data_plot <- renderPlot(
-        plot(seq_along(counts) - 1, counts, type = "o", pch = 16, col = "red",
+        plot(seq_along(counts) - 1, counts, type = "o", pch = 16, col = "black",
           xlab = input$data_units, ylab = "Cases", cex.lab = 1.5,
           xlim = c(0, max(length(counts) - 1, 1)), ylim = c(0, max(counts, 1))
         )
