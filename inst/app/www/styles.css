@@ -20,7 +20,11 @@ noscript {
   margin-top: -0.5rem;
 }
 
-td.selected {
+td.selected, .shiny-notification {
   background-color: black;
   color: white;
+}
+
+#data_upload {
+  display: none;
 }

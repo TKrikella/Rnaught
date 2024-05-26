@@ -1,0 +1,17 @@
+<h4 class="mb-3">Load samples</h4>
+{{
+  checkboxInput(inputId = "covid_canada", label = "COVID-19 Canada, 2020/03/03 - 2020/03/31 (Weekly)",
+    value = FALSE, width = "100%"
+  )
+}}
+{{
+  checkboxInput(inputId = "covid_ontario", label = "COVID-19 Ontario, 2020/03/03 - 2020/03/31 (Weekly)",
+    value = FALSE, width = "100%"
+  )
+}}
+<div>
+  <small id="data_samples_warn" class="form-text text-primary shiny-text-output"></small>
+</div>
+<button id="data_samples" type="button" class="btn btn-outline-primary btn-sm action-button mt-3">
+  <span class="glyphicon glyphicon-plus"></span> Add
+</button>

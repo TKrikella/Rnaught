@@ -10,7 +10,9 @@ data_logic <- function(input, output, react_values) {
 
   render_plot(input, output)
   single_entry(input, output, react_values)
-  bulk_entry(input, output, react_values)
+  manual_bulk_entry(input, output, react_values)
+  upload_data(input, output, react_values)
+  load_samples(input, output, react_values)
   render_data(output, react_values)
   delete_data(input, react_values)
   export_data(output, react_values)
@@ -93,80 +95,143 @@ single_entry <- function(input, output, react_values) {
   })
 }
 
-# Add multiple datasets to the existing table.
-bulk_entry <- function(input, output, react_values) {
+manual_bulk_entry <- function(input, output, react_values) {
   observeEvent(input$data_bulk, {
-    tryCatch(
-      {
+    validate_bulk_data(input, output, react_values, "data_area")
+  })
+}
+
+upload_data <- function(input, output, react_values) {
+  observeEvent(input$data_upload, {
+    validate_bulk_data(input, output, react_values, "data_upload")
+  })
+}
+
+validate_bulk_data <- function(input, output, react_values, data_source) {
+  tryCatch(
+    {
+      if (data_source == "data_area") {
         datasets <- read.csv(text = input$data_area, header = FALSE, sep = ",")
-
-        names <- trimws(datasets[, 1])
-        units <- trimws(datasets[, 2])
-        counts <- apply(datasets[, 3:ncol(datasets)], 1,
-          function(row) {
-            row <- suppressWarnings(as.integer(row))
-            toString(row[!is.na(row) & row >= 0])
-          }
-        )
-
-        warning_text <- ""
-
-        # Ensure the dataset names are neither blank nor duplicates.
-        if (anyNA(names) || any(names == "")) {
-          warning_text <- paste0(warning_text, sep = "<br>",
-            "Each row must begin with a non-blank dataset name."
-          )
-        } else {
-          if (length(unique(names)) != length(names)) {
-            warning_text <- paste0(warning_text, sep = "<br>",
-              "The rows contain duplicate dataset names."
-            )
-          }
-          if (any(names %in% react_values$data_table[, 1])) {
-            warning_text <- paste0(warning_text, sep = "<br>",
-              "The rows contain dataset names which already exist."
-            )
-          }
-        }
-
-        # Ensure the second entry in each row is a time unit equal to
-        # "Days" or "Weeks".
-        if (!all(units %in% c("Days", "Weeks"))) {
-          warning_text <- paste0(warning_text, sep = "<br>",
-            "The second entry in each row must be either 'Days' or 'Weeks'."
-          )
-        }
-
-        # Ensure the counts in each row have at least one non-negative integer.
-        if (any(counts == "")) {
-          warning_text <- paste0(warning_text, sep = "<br>",
-            "Each row must contain at least one non-negative integer."
-          )
-        }
-
-        output$data_area_warn <- renderUI(HTML(warning_text))
-
-        if (warning_text == "") {
-          # Add the new datasets to the data table.
-          new_rows <- data.frame(names, units, counts)
-          colnames(new_rows) <- c("Name", "Time units", "Case counts")
-          react_values$data_table <- rbind(react_values$data_table, new_rows)
-
-          # Evaluate all existing estimators on the new dataset and update the
-          # corresponding row in the estimates table.
-          update_estimates_rows(new_rows, react_values)
-
-          showNotification("Datasets added successfully.",
-            duration = 3, id = "notify-success"
-          )
-        }
-      },
-      error = function(e) {
-        output$data_area_warn <- renderText(
-          "The input does not match the required format."
+      } else if (data_source == "data_upload") {
+        datasets <- read.csv(
+          file = input$data_upload$datapath, header = FALSE, sep = ","
         )
       }
-    )
+
+      names <- trimws(datasets[, 1])
+      units <- trimws(datasets[, 2])
+      counts <- apply(data.frame(datasets[, 3:ncol(datasets)]), 1,
+        function(row) {
+          row <- suppressWarnings(as.integer(row))
+          toString(row[!is.na(row) & row >= 0])
+        }
+      )
+
+      warning_text <- ""
+
+      # Ensure the dataset names are neither blank nor duplicates.
+      if (anyNA(names) || any(names == "")) {
+        warning_text <- paste0(warning_text,
+          "Each row must begin with a non-blank dataset name.<br>"
+        )
+      } else {
+        if (length(unique(names)) != length(names)) {
+          warning_text <- paste0(warning_text,
+            "The rows contain duplicate dataset names.<br>"
+          )
+        }
+        if (any(names %in% react_values$data_table[, 1])) {
+          warning_text <- paste0(warning_text,
+            "The rows contain dataset names which already exist.<br>"
+          )
+        }
+      }
+
+      # Ensure the second entry in each row is a time unit equal to
+      # "Days" or "Weeks".
+      if (!all(units %in% c("Days", "Weeks"))) {
+        warning_text <- paste0(warning_text,
+          "The second entry in each row must be either 'Days' or 'Weeks'.<br>"
+        )
+      }
+
+      # Ensure the counts in each row have at least one non-negative integer.
+      if (any(counts == "")) {
+        warning_text <- paste0(warning_text,
+          "Each row must contain at least one non-negative integer.<br>"
+        )
+      }
+
+      output[[paste0(data_source, "_warn")]] <- renderUI(HTML(warning_text))
+
+      if (warning_text == "") {
+        # Add the new datasets to the data table.
+        new_rows <- data.frame(names, units, counts)
+        colnames(new_rows) <- c("Name", "Time units", "Case counts")
+        react_values$data_table <- rbind(react_values$data_table, new_rows)
+
+        # Evaluate all existing estimators on the new datasets and update the
+        # corresponding rows in the estimates table.
+        update_estimates_rows(new_rows, react_values)
+
+        showNotification("Datasets added successfully.",
+          duration = 3, id = "notify-success"
+        )
+      }
+    },
+    error = function(e) {
+      output[[paste0(data_source, "_warn")]] <- renderText(
+        "The input does not match the required format."
+      )
+    }
+  )
+}
+
+# Load sample datasets.
+load_samples <- function(input, output, react_values) {
+  observeEvent(input$data_samples, {
+    names <- c()
+    units <- c()
+    counts <- c()
+
+    # COVID-19 Canada, March 2020 (weekly).
+    if (input$covid_canada) {
+      names <- c(names, "COVID-19 Canada 2020/03/03 - 2020/03/31")
+      units <- c(units, "Weeks")
+      counts <- c(counts, toString(Rnaught::COVIDCanada[seq(41, 69, 7), 2]))
+    }
+    # COVID-19 Ontario, March 2020 (weekly).
+    if (input$covid_ontario) {
+      names <- c(names, "COVID-19 Ontario 2020/03/03 - 2020/03/31")
+      units <- c(units, "Weeks")
+      counts <- c(counts,
+        toString(Rnaught::COVIDCanadaPT[seq(10176, 10204, 7), 3])
+      )
+    }
+
+    if (length(names) == 0) {
+      output$data_samples_warn <- renderText(
+        "At least one sample dataset must be selected."
+      )
+    } else if (any(names %in% react_values$data_table[, 1])) {
+      output$data_samples_warn <- renderText(
+        "At least one of the selected dataset names already exist."
+      )
+    } else {
+      output$data_samples_warn <- renderText("")
+
+      new_rows <- data.frame(names, units, counts)
+      colnames(new_rows) <- c("Name", "Time units", "Case counts")
+      react_values$data_table <- rbind(react_values$data_table, new_rows)
+
+      # Evaluate all existing estimators on the sample datasets and update the
+      # corresponding rows in the estimates table.
+      update_estimates_rows(new_rows, react_values)
+
+      showNotification("Datasets added successfully.",
+        duration = 3, id = "notify-success"
+      )
+    }
   })
 }
 
