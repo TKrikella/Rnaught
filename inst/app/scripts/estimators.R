@@ -1,6 +1,12 @@
+# Main logic block for estimator-related interactions.
 estimators_logic <- function(input, output, react_values) {
   # Initialize a data frame to hold estimates.
-  react_values$estimates_table <- data.frame(Dataset = character(0))
+  react_values$estimates_table <- data.frame(
+    Estimator = character(0),
+    `Serial interval` = character(0),
+    check.names = FALSE
+
+  )
   # Initialize a list to hold added estimators.
   react_values$estimators <- list()
 
@@ -37,9 +43,9 @@ add_estimator <- function(method, new_estimator, output, react_values) {
     duration = 3, id = "notify-success"
   )
 
-  # Evaluate all the new estimator on all existing datasets and create a new
-  # column in the estimates table.
-  update_estimates_col(new_estimator, react_values)
+  # Evaluate the new estimator on all existing datasets and create a new row in
+  # the estimates table.
+  update_estimates_row(new_estimator, react_values)
 }
 
 # Ensure serial intervals are specified as positive numbers.
@@ -176,21 +182,26 @@ convert_mu_units <- function(data_units, estimator_units, mu) {
   mu
 }
 
-# Add a column to the estimates table when a new estimator is added.
-update_estimates_col <- function(estimator, react_values) {
+# Add a row to the estimates table when a new estimator is added.
+update_estimates_row <- function(estimator, react_values) {
   dataset_rows <- seq_len(nrow(react_values$data_table))
-  estimates <- dataset_rows
+  estimates <- c()
 
-  for (row in dataset_rows) {
-    estimate <- eval_estimator(estimator, react_values$data_table[row, ])
-    estimates[row] <- estimate
+  if (nrow(react_values$data_table) > 0) {
+    estimates <- dataset_rows
+    for (row in dataset_rows) {
+      estimate <- eval_estimator(estimator, react_values$data_table[row, ])
+      estimates[row] <- estimate
+    }
   }
 
-  estimates <- data.frame(estimates)
-  colnames(estimates) <- estimates_col_name(estimates, estimator)
+  new_row <- data.frame(
+    t(c(estimator_name(estimator), estimator_mu_text(estimator), estimates))
+  )
+  colnames(new_row) <- colnames(react_values$estimates_table)
 
-  react_values$estimates_table <- cbind(
-    react_values$estimates_table, estimates
+  react_values$estimates_table <- rbind(
+    react_values$estimates_table, new_row
   )
 }
 
@@ -214,7 +225,7 @@ eval_estimator <- function(estimator, dataset) {
         max_shape = estimator$max_shape, max_scale = estimator$max_scale
       )
       estimated_mu <- round(sum(estimate$supp * estimate$pmf), 2)
-      estimate <- paste0(round(estimate$r0, 2), " (&#956; = ", estimated_mu,
+      estimate <- paste0(round(estimate$r0, 2), " (SI = ", estimated_mu,
         " ", tolower(dataset[, 2]), ")"
       )
     } else {
@@ -226,39 +237,39 @@ eval_estimator <- function(estimator, dataset) {
   return(estimate)
 }
 
-# Create the column name of an estimator when it is
-# added to the estimates table.
-estimates_col_name <- function(estimates, estimator) {
+# Create the name of an estimator to be added to the first column of the
+# estimates table.
+estimator_name <- function(estimator) {
   if (estimator$method == "id") {
-    return(paste0("ID", " (&#956; = ", estimator$mu, " ",
-      tolower(estimator$mu_units), ")"
-    ))
+    return("ID")
   } else if (estimator$method == "idea") {
-    return(paste0("IDEA", " (&#956; = ", estimator$mu, " ",
-      tolower(estimator$mu_units), ")"
-    ))
+    return("IDEA")
   } else if (estimator$method == "seq_bayes") {
-    return(paste0("seqB", " (&#956; = ", estimator$mu, " ",
-      tolower(estimator$mu_units), ", &#954; = ", estimator$kappa, ")"
-    ))
+    return(paste0("seqB", " (&#954; = ", estimator$kappa, ")"))
   } else if (estimator$method == "wp") {
     if (is.na(estimator$mu)) {
       return(paste0("WP (", estimator$grid_length, ", ",
         round(estimator$max_shape, 3), ", ", round(estimator$max_scale, 3), ")"
       ))
     } else {
-      return(paste0("WP", " (&#956; = ", estimator$mu, " ",
-        tolower(estimator$mu_units), ")"
-      ))
+      return("WP")
     }
   }
+}
+
+# Create the text to be displayed for the serial interval in the second column
+# of the estimates table.
+estimator_mu_text <- function(estimator) {
+  if (is.na(estimator$mu)) {
+    return("—")
+  }
+  paste(estimator$mu, tolower(estimator$mu_units))
 }
 
 # Render the estimates table whenever it is updated.
 render_estimates <- function(output, react_values) {
   observe({
     output$estimates_table <- DT::renderDataTable(react_values$estimates_table,
-      selection = list(target = "column", selectable = c(0)),
       escape = FALSE, rownames = FALSE,
       options = list(
         columnDefs = list(list(className = "dt-left", targets = "_all"))
@@ -267,13 +278,13 @@ render_estimates <- function(output, react_values) {
   })
 }
 
-# Delete columns from the estimates table,
-# as well as the corresponding estimators.
+# Delete rows from the estimates table and the corresponding estimators.
 delete_estimators <- function(input, react_values) {
   observeEvent(input$estimators_delete, {
-    cols_selected <- input$estimates_table_columns_selected
-    react_values$estimators <- react_values$estimators[-cols_selected]
-    react_values$estimates_table[, cols_selected + 1] <- NULL
+    rows_selected <- input$estimates_table_rows_selected
+    react_values$estimators <- react_values$estimators[-rows_selected]
+    react_values$estimates_table <-
+      react_values$estimates_table[-rows_selected, ]
   })
 }
 
@@ -299,7 +310,6 @@ export_estimates <- function(output, react_values) {
 
 # Substitute HTML entity codes with natural names.
 sub_entity <- function(obj) {
-  obj <- gsub("&#956;", "mu", obj)
   obj <- gsub("&#954;", "kappa", obj)
   obj
 }

@@ -8,21 +8,14 @@ noscript {
   text-align: center;
 }
 
-.nav-pills .active {
-  color: white !important;
-}
-
-.action-button:hover, #bulk-help-toggle:hover, #data_export:hover {
-  color: white !important;
-}
-
-#data_plot {
-  margin-top: -0.5rem;
-}
-
-td.selected, .shiny-notification {
+.shiny-notification {
   background-color: black;
   color: white;
+}
+
+.plotly-notifier .notifier-note {
+  background-color: black !important;
+  color: white !important;
 }
 
 #data_upload {

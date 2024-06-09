@@ -1,0 +1,19 @@
+<h4>Estimates table</h4>
+<!-- Estimates table. -->
+<div class="my-3">
+  {{ DT::dataTableOutput(outputId = "estimates_table") }}
+</div>
+<!-- Display inactive delete button when no rows are selected. -->
+<button type="button" class="btn btn-primary btn-sm text-white" disabled
+        data-display-if="'estimates_table_rows_selected' in input && input.estimates_table_rows_selected.length == 0">
+  <span class="glyphicon glyphicon-remove"></span> Delete row(s)
+</button>
+<!-- Display active delete button when at least one row is selected. -->
+<button id="estimators_delete" type="button" class="btn btn-primary btn-sm action-button text-white"
+        data-display-if="'estimates_table_rows_selected' in input && input.estimates_table_rows_selected.length != 0">
+  <span class="glyphicon glyphicon-remove"></span> Delete row(s)
+</button>
+<!-- Button to export estimates table as a CSV file. -->
+<a id="estimates_export" type="button" class="btn btn-outline-primary btn-sm shiny-download-link">
+  <span class="glyphicon glyphicon-download-alt"></span> Export table
+</a>

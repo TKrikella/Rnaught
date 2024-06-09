@@ -1,7 +1,7 @@
 <div class="row">
   <!-- Serial interval (mu). -->
   <div class="col-md">
-    {{ htmlTemplate("templates/content/estimators/add-estimators/components/mu.html", id = "seq_bayes") }}
+    {{ htmlTemplate("templates/content/estimation/estimates/add-estimators/mu.html", id = "seq_bayes") }}
   </div>
   <!-- Maximum value of the uniform prior (kappa). -->
   <div class="col-md mt-2 mt-md-0">
@@ -9,8 +9,8 @@
     <label class="form-label" for="kappa">
       Maximum prior (&#954;)
       <sup data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true"
-           data-bs-title="The initial maximum belief of <em>R<sub>0</sub></em>. The higher this value, the higher
-                          <em>R<sub>0</sub></em> is believed to be prior to the estimation.">
+           data-bs-title="The initial maximum belief of <em>R</em><sub>0</sub>. The higher this value, the higher
+                          <em>R</em><sub>0</sub> is believed to be prior to the estimation.">
         [?]
       </sup>
     </label>

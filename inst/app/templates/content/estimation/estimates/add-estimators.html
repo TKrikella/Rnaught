@@ -1,0 +1,16 @@
+<h4>Add estimators</h4>
+<form class="my-3">
+  <!-- Dropdown to select estimator. -->
+  <label class="form-label" for="estimator_select">Select estimator:</label>
+  <select name="estimator_select" class="form-select">
+    <option value="id" selected>Incidence Decay (ID)</option>
+    <option value="idea">Incidence Decay and Exponential Adjustment (IDEA)</option>
+    <option value="seq_bayes">Sequential Bayes (seqB)</option>
+    <option value="wp">White and Pagano (WP)</option>
+  </select>
+  <!-- Parameters. -->
+  {{ htmlTemplate("templates/content/estimation/estimates/add-estimators/parameters.html", id = "id") }}
+  {{ htmlTemplate("templates/content/estimation/estimates/add-estimators/parameters.html", id = "idea") }}
+  {{ htmlTemplate("templates/content/estimation/estimates/add-estimators/parameters.html", id = "seq_bayes") }}
+  {{ htmlTemplate("templates/content/estimation/estimates/add-estimators/parameters.html", id = "wp") }}
+</form>

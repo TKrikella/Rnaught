@@ -8,14 +8,7 @@
   <div id="{{ id }}" class="accordion-collapse collapse" data-bs-parent="#estimators-accordion">
     <div class="accordion-body">
       <p>Reference: <a href="{{ reference_url }}" target="_blank"><em>{{ reference_label }}</em></a></p>
-      <p>{{ htmlTemplate(paste0("templates/content/estimators/add-estimators/descriptions/", id, ".html")) }}</p>
-      <h5>Parameters</h5>
-      <form class="my-3">
-        {{ htmlTemplate(paste0("templates/content/estimators/add-estimators/parameters/", id, ".html")) }}
-      </form>
-      <button id="add_{{ id }}" type="button" class="btn btn-outline-primary btn-sm action-button">
-        <span class="glyphicon glyphicon-plus"></span> Add
-      </button>
+      <p>{{ htmlTemplate(paste0("templates/content/estimation/about-estimators/", id, ".html")) }}</p>
     </div>
   </div>
 </div>

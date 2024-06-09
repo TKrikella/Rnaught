@@ -3,7 +3,7 @@ $(document).ready(() => {
   $('[data-bs-toggle="tooltip"]').tooltip();
 
   // Toggle the text in the bulk data help button.
-  $('#bulk-help-toggle').on('click', event => {
+  $('#data-format-toggle').on('click', event => {
     btn = $(event.target);
     show_format = 'Show required format';
     btn.text(btn.text() === show_format ? 'Hide required format' : show_format);

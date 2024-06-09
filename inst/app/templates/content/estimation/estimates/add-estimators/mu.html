@@ -1,6 +1,6 @@
 <!-- Serial interval label and help tooltip. -->
 <label class="form-label" for="mu_{{ id }}">
-  Serial interval (&#956;)
+  Serial interval
   <sup data-bs-toggle="tooltip" data-bs-placement="right"
        data-bs-title="The serial interval is the time between when an infected individual (the infector) becomes
                       symptomatic, to when another individual (who is infected by the infector) becomes symptomatic.">
@@ -17,4 +17,6 @@
   </select>
 </div>
 <!-- Warning text for incorrect values. -->
-<small id="mu_{{ id }}_warn" class="form-text text-primary shiny-text-output"></small>
+<div>
+  <small id="mu_{{ id }}_warn" class="form-text text-primary shiny-text-output"></small>
+</div>

@@ -6,14 +6,17 @@
 app <- function() {
   missing_pkgs <- c()
   # Check for any missing, required packages.
-  if (!requireNamespace("shiny", quietly = TRUE)) {
-    missing_pkgs <- c(missing_pkgs, "shiny")
-  }
   if (!requireNamespace("bslib", quietly = TRUE)) {
     missing_pkgs <- c(missing_pkgs, "bslib")
   }
+  if (!requireNamespace("shiny", quietly = TRUE)) {
+    missing_pkgs <- c(missing_pkgs, "shiny")
+  }
   if (!requireNamespace("DT", quietly = TRUE)) {
     missing_pkgs <- c(missing_pkgs, "DT")
+  }
+  if (!requireNamespace("plotly", quietly = TRUE)) {
+    missing_pkgs <- c(missing_pkgs, "plotly")
   }
 
   # If any of the required packages are missing,

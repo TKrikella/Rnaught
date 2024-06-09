@@ -19,9 +19,10 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    shiny,
     bslib,
-    DT
+    shiny,
+    DT,
+    plotly
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

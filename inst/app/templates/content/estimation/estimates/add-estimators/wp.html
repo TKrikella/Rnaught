@@ -14,7 +14,7 @@
 </div>
 <!-- Show the input field for the serial interval if it is known. -->
 <div data-display-if="input.wp_mu_known == 'Yes'" class="mt-2 mt-md-0">
-    {{ htmlTemplate("templates/content/estimators/add-estimators/components/mu.html", id = "wp") }}
+  {{ htmlTemplate("templates/content/estimation/estimates/add-estimators/mu.html", id = "wp") }}
 </div>
 <!-- Show the input fields for the grid search parameters if the serial interval is unknown. -->
 <div data-display-if="input.wp_mu_known == 'No'" class="row">

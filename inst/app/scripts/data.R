@@ -8,12 +8,12 @@ data_logic <- function(input, output, react_values) {
     check.names = FALSE
   )
 
-  render_plot(input, output)
-  single_entry(input, output, react_values)
-  manual_bulk_entry(input, output, react_values)
+  manual_entry(input, output, react_values)
   upload_data(input, output, react_values)
   load_samples(input, output, react_values)
-  render_data(output, react_values)
+  render_data_table(output, react_values)
+  render_plot(input, output, react_values, "Days")
+  render_plot(input, output, react_values, "Weeks")
   delete_data(input, react_values)
   export_data(output, react_values)
 }
@@ -23,91 +23,58 @@ tokenize_counts <- function(counts_str) {
   suppressWarnings(as.integer(unlist(strsplit(trimws(counts_str), ","))))
 }
 
-# Render the preview plot for single entry data.
-render_plot <- function(input, output) {
+# Render the plots for daily and weekly data when the data table is updated.
+render_plot <- function(input, output, react_values, time_units) {
   observe({
-    counts <- tokenize_counts(input$data_counts)
-    if (length(counts) > 0 && !anyNA(counts) && all(counts >= 0)) {
-      output$data_plot <- renderPlot(
-        plot(seq_along(counts) - 1, counts, type = "o", pch = 16, col = "black",
-          xlab = input$data_units, ylab = "Cases", cex.lab = 1.5,
-          xlim = c(0, max(length(counts) - 1, 1)), ylim = c(0, max(counts, 1))
+    datasets <- react_values$data_table[
+      which(react_values$data_table[["Time units"]] == time_units),
+    ]
+
+    data_plot <- plotly::plot_ly(type = "scatter", mode = "lines")
+    if (nrow(datasets) > 0) {
+      for (i in seq_len(nrow(datasets))) {
+        counts <- tokenize_counts(datasets[i, 3])
+        data_plot <- plotly::add_trace(data_plot,
+          x = seq_along(counts) - 1, y = counts, name = datasets[i, 1]
         )
-      )
-    } else {
-      output$data_plot <- renderPlot(
-        plot(NULL, xlim = c(0, 10), ylim = c(0, 10),
-          xlab = input$data_units, ylab = "Cases", cex.lab = 1.5
-        )
-      )
+      }
     }
+
+    plot_title <- paste(
+      if (time_units == "Days") "Daily" else "Weekly", "case counts"
+    )
+
+    data_plot <- plotly::layout(data_plot, title = plot_title,
+      xaxis = list(title = time_units), yaxis = list(title = "Cases")
+    )
+
+    data_plot <- plotly::config(data_plot, displaylogo = FALSE,
+      toImageButtonOptions = list(
+        filename = paste0("Rnaught_data_", tolower(time_units), "_plot")
+      )
+    )
+
+    output[[paste0("data_plot_", tolower(time_units))]] <-
+      plotly::renderPlotly(data_plot)
   })
 }
 
-# Add a single dataset to the existing table.
-single_entry <- function(input, output, react_values) {
-  observeEvent(input$data_single, {
-    valid <- TRUE
-
-    # Ensure the dataset name is neither blank nor a duplicate.
-    name <- trimws(input$data_name)
-    if (name == "") {
-      output$data_name_warn <- renderText("The dataset name cannot be blank.")
-      valid <- FALSE
-    } else if (name %in% react_values$data_table[, 1]) {
-      output$data_name_warn <- renderText(
-        "There is already a dataset with the specified name."
-      )
-      valid <- FALSE
-    } else {
-      output$data_name_warn <- renderText("")
-    }
-
-    # Ensure the case counts are specified as a comma-separated of one or more
-    # non-negative integers.
-    counts <- tokenize_counts(input$data_counts)
-    if (length(counts) == 0) {
-      output$data_counts_warn <- renderText("Case counts cannot be blank.")
-      valid <- FALSE
-    } else if (anyNA(counts) || any(counts < 0)) {
-      output$data_counts_warn <- renderText(
-        "Case counts can only contain non-negative integers."
-      )
-      valid <- FALSE
-    } else {
-      output$data_counts_warn <- renderText("")
-    }
-
-    if (valid) {
-      # Add the new dataset to the data table.
-      new_row <- data.frame(name, input$data_units, toString(counts))
-      colnames(new_row) <- c("Name", "Time units", "Case counts")
-      react_values$data_table <- rbind(react_values$data_table, new_row)
-
-      # Evaluate all existing estimators on the new dataset and update the
-      # corresponding row in the estimates table.
-      update_estimates_rows(new_row, react_values)
-
-      showNotification("Dataset added successfully.",
-        duration = 3, id = "notify-success"
-      )
-    }
-  })
-}
-
-manual_bulk_entry <- function(input, output, react_values) {
+# Validate and add manually-entered datasets.
+manual_entry <- function(input, output, react_values) {
   observeEvent(input$data_bulk, {
-    validate_bulk_data(input, output, react_values, "data_area")
+    validate_data(input, output, react_values, "data_area")
   })
 }
 
+# Validate and add datasets from a CSV file.
 upload_data <- function(input, output, react_values) {
   observeEvent(input$data_upload, {
-    validate_bulk_data(input, output, react_values, "data_upload")
+    validate_data(input, output, react_values, "data_upload")
   })
 }
 
-validate_bulk_data <- function(input, output, react_values, data_source) {
+# Validate datasets and update the data table.
+validate_data <- function(input, output, react_values, data_source) {
   tryCatch(
     {
       if (data_source == "data_area") {
@@ -171,8 +138,8 @@ validate_bulk_data <- function(input, output, react_values, data_source) {
         react_values$data_table <- rbind(react_values$data_table, new_rows)
 
         # Evaluate all existing estimators on the new datasets and update the
-        # corresponding rows in the estimates table.
-        update_estimates_rows(new_rows, react_values)
+        # corresponding columns in the estimates table.
+        update_estimates_cols(new_rows, react_values)
 
         showNotification("Datasets added successfully.",
           duration = 3, id = "notify-success"
@@ -225,8 +192,8 @@ load_samples <- function(input, output, react_values) {
       react_values$data_table <- rbind(react_values$data_table, new_rows)
 
       # Evaluate all existing estimators on the sample datasets and update the
-      # corresponding rows in the estimates table.
-      update_estimates_rows(new_rows, react_values)
+      # corresponding columns in the estimates table.
+      update_estimates_cols(new_rows, react_values)
 
       showNotification("Datasets added successfully.",
         duration = 3, id = "notify-success"
@@ -236,30 +203,22 @@ load_samples <- function(input, output, react_values) {
 }
 
 # Render the data table when new datasets are added.
-render_data <- function(output, react_values) {
+render_data_table <- function(output, react_values) {
   observe({
-    output$data_table <- DT::renderDataTable(react_values$data_table)
+    output$data_table <- DT::renderDataTable(
+      react_values$data_table, rownames = FALSE
+    )
   })
 }
 
-# Delete rows in the data table,
-# and the corresponding rows in the estimates table.
+# Delete rows in the data table and the corresponding columns in the estimates
+# table.
 delete_data <- function(input, react_values) {
   observeEvent(input$data_delete, {
-    new_table <- react_values$data_table[-input$data_table_rows_selected, ]
-    if (nrow(new_table) > 0) {
-      rownames(new_table) <- seq_len(nrow(new_table))
-    }
-    react_values$data_table <- new_table
-
-    if (ncol(react_values$estimates_table) == 1) {
-      react_values$estimates_table <- data.frame(
-        Datasets = react_values$data_table[, 1]
-      )
-    } else {
-      react_values$estimates_table <-
-        react_values$estimates_table[-input$data_table_rows_selected, ]
-    }
+    rows_selected <- input$data_table_rows_selected
+    react_values$data_table <- react_values$data_table[-rows_selected, ]
+    react_values$estimates_table <-
+      react_values$estimates_table[, -(rows_selected + 2)]
   })
 }
 
@@ -276,26 +235,23 @@ export_data <- function(output, react_values) {
 }
 
 # When new datasets are added, evaluate all existing estimators on them and
-# add new rows to the estimates table.
-update_estimates_rows <- function(datasets, react_values) {
-  new_rows <- data.frame(
-    matrix(nrow = nrow(datasets), ncol = ncol(react_values$estimates_table))
+# add new columns to the estimates table.
+update_estimates_cols <- function(datasets, react_values) {
+  new_cols <- data.frame(
+    matrix(nrow = nrow(react_values$estimates_table), ncol = nrow(datasets))
   )
-  colnames(new_rows) <- colnames(react_values$estimates_table)
+  colnames(new_cols) <- datasets[, 1]
 
-  for (row in seq_len(nrow(datasets))) {
-    new_rows[row, 1] <- datasets[row, 1]
-
-    if (length(react_values$estimators) > 0) {
-      for (col in 2:ncol(react_values$estimates_table)) {
-        new_rows[row, col] <- eval_estimator(
-          react_values$estimators[[col - 1]], datasets[row, ]
-        )
+  if (nrow(new_cols) > 0) {
+    for (row in seq_len(nrow(new_cols))) {
+      estimator <- react_values$estimators[[row]]
+      for (col in seq_len(ncol(new_cols))) {
+        new_cols[row, col] <- eval_estimator(estimator, datasets[col, ])
       }
     }
   }
 
-  react_values$estimates_table <- rbind(
-    react_values$estimates_table, new_rows
+  react_values$estimates_table <- cbind(
+    react_values$estimates_table, new_cols
   )
 }

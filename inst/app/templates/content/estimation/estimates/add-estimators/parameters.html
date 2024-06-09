@@ -1,0 +1,7 @@
+<div class="my-4" data-display-if="input.estimator_select === '{{ id }}'">
+  <h5>Parameters</h5>
+  {{ htmlTemplate(paste0("templates/content/estimation/estimates/add-estimators/", id, ".html")) }}
+  <button id="add_{{ id }}" type="button" class="btn btn-outline-primary btn-sm action-button mt-3">
+    <span class="glyphicon glyphicon-plus"></span> Add
+  </button>
+</div>
