@@ -141,9 +141,7 @@ validate_data <- function(input, output, react_values, data_source) {
         # corresponding columns in the estimates table.
         update_estimates_cols(new_rows, react_values)
 
-        showNotification("Datasets added successfully.",
-          duration = 3, id = "notify-success"
-        )
+        showNotification("Datasets added successfully.", duration = 3)
       }
     },
     error = function(e) {
@@ -195,9 +193,7 @@ load_samples <- function(input, output, react_values) {
       # corresponding columns in the estimates table.
       update_estimates_cols(new_rows, react_values)
 
-      showNotification("Datasets added successfully.",
-        duration = 3, id = "notify-success"
-      )
+      showNotification("Datasets added successfully.", duration = 3)
     }
   })
 }

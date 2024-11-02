@@ -41,5 +41,12 @@
 #' # Obtain R0 when the serial distribution has a mean of three days.
 #' id(cases, mu = 3 / 7)
 id <- function(cases, mu) {
+  validate_cases(cases, min_length = 1, min_count = 1)
+  if (!is_real(mu) || mu <= 0) {
+    stop("The serial interval (`mu`) must be a number greater than 0.",
+      call. = FALSE
+    )
+  }
+
   exp(sum((log(cases) * mu) / seq_along(cases)) / length(cases))
 }

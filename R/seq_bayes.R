@@ -84,10 +84,31 @@
 #' # Note that the following always holds:
 #' estimate == sum(posterior$supp * posterior$pmf)
 seq_bayes <- function(cases, mu, kappa = 20, post = FALSE) {
+  validate_cases(cases, min_length = 2, min_count = 0)
+  if (!is_real(mu) || mu <= 0) {
+    stop("The serial interval (`mu`) must be a number greater than 0.",
+      call. = FALSE
+    )
+  }
+  if (!is_real(kappa) || kappa < 1) {
+    stop(
+      paste("The largest value of the uniform prior (`kappa`)",
+        "must be a number greater than or equal to 1."
+      ), call. = FALSE
+    )
+  }
+  if (!identical(post, TRUE) && !identical(post, FALSE)) {
+    stop("The posterior flag (`post`) must be set to `TRUE` or `FALSE`.",
+      call. = FALSE
+    )
+  }
+
   if (any(cases == 0)) {
     times <- which(cases > 0)
     if (length(times) < 2) {
-      stop("Vector of case counts must contain at least two positive integers.")
+      stop("Case counts must contain at least two positive integers.",
+        call. = FALSE
+      )
     }
     cases <- cases[times]
   } else {

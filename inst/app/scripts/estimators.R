@@ -29,8 +29,8 @@ add_estimator <- function(method, new_estimator, output, react_values) {
   # Check whether the new estimator is a duplicate, and warn if so.
   for (i in seq_len(num_estimators)) {
     if (identical(new_estimator, react_values$estimators[[i]])) {
-      showNotification("Error: This estimator has already been added.",
-        duration = 3, id = "notify-error"
+      showNotification(
+        "Error: This estimator has already been added.", duration = 3
       )
       return()
     }
@@ -39,9 +39,7 @@ add_estimator <- function(method, new_estimator, output, react_values) {
   # Add the new estimator to the list of estimators.
   react_values$estimators[[num_estimators + 1]] <- new_estimator
 
-  showNotification("Estimator added successfully.",
-    duration = 3, id = "notify-success"
-  )
+  showNotification("Estimator added successfully.", duration = 3)
 
   # Evaluate the new estimator on all existing datasets and create a new row in
   # the estimates table.
@@ -95,9 +93,9 @@ add_seq_bayes <- function(input, output, react_values) {
     kappa <- trimws(input$kappa)
     kappa <- if (kappa == "") 20 else suppressWarnings(as.numeric(kappa))
 
-    if (is.na(kappa) || kappa <= 0) {
+    if (is.na(kappa) || kappa < 1) {
       output$kappa_warn <- renderText(
-        "The maximum prior must be a positive number."
+        "The maximum prior must be a number greater than or equal to 1."
       )
     } else if (!is.null(mu)) {
       output$kappa_warn <- renderText("")
@@ -209,32 +207,44 @@ update_estimates_row <- function(estimator, react_values) {
 eval_estimator <- function(estimator, dataset) {
   cases <- as.integer(unlist(strsplit(dataset[, 3], ",")))
 
-  if (estimator$method == "id") {
-    mu <- convert_mu_units(dataset[, 2], estimator$mu_units, estimator$mu)
-    estimate <- round(Rnaught::id(cases, mu), 2)
-  } else if (estimator$method == "idea") {
-    mu <- convert_mu_units(dataset[, 2], estimator$mu_units, estimator$mu)
-    estimate <- round(Rnaught::idea(cases, mu), 2)
-  } else if (estimator$method == "seq_bayes") {
-    mu <- convert_mu_units(dataset[, 2], estimator$mu_units, estimator$mu)
-    estimate <- round(Rnaught::seq_bayes(cases, mu, estimator$kappa), 2)
-  } else if (estimator$method == "wp") {
-    if (is.na(estimator$mu)) {
-      estimate <- Rnaught::wp(cases, serial = TRUE,
-        grid_length = estimator$grid_length,
-        max_shape = estimator$max_shape, max_scale = estimator$max_scale
-      )
-      estimated_mu <- round(sum(estimate$supp * estimate$pmf), 2)
-      estimate <- paste0(round(estimate$r0, 2), " (SI = ", estimated_mu,
-        " ", tolower(dataset[, 2]), ")"
-      )
-    } else {
-      mu <- convert_mu_units(dataset[, 2], estimator$mu_units, estimator$mu)
-      estimate <- round(Rnaught::wp(cases, mu), 2)
-    }
-  }
+  tryCatch(
+    {
+      if (estimator$method == "id") {
+        mu <- convert_mu_units(dataset[, 2], estimator$mu_units, estimator$mu)
+        estimate <- round(Rnaught::id(cases, mu), 2)
+      } else if (estimator$method == "idea") {
+        mu <- convert_mu_units(dataset[, 2], estimator$mu_units, estimator$mu)
+        estimate <- round(Rnaught::idea(cases, mu), 2)
+      } else if (estimator$method == "seq_bayes") {
+        mu <- convert_mu_units(dataset[, 2], estimator$mu_units, estimator$mu)
+        estimate <- round(Rnaught::seq_bayes(cases, mu, estimator$kappa), 2)
+      } else if (estimator$method == "wp") {
+        if (is.na(estimator$mu)) {
+          estimate <- Rnaught::wp(cases, serial = TRUE,
+            grid_length = estimator$grid_length,
+            max_shape = estimator$max_shape, max_scale = estimator$max_scale
+          )
+          estimated_mu <- round(sum(estimate$supp * estimate$pmf), 2)
+          estimate <- paste0(round(estimate$r0, 2), " (SI = ", estimated_mu,
+            " ", tolower(dataset[, 2]), ")"
+          )
+        } else {
+          mu <- convert_mu_units(dataset[, 2], estimator$mu_units, estimator$mu)
+          estimate <- round(Rnaught::wp(cases, mu), 2)
+        }
+      }
 
-  return(estimate)
+      return(estimate)
+    }, error = function(e) {
+      showNotification(
+        paste0(toString(e),
+          " [Estimator: ", sub(" .*", "", estimator_name(estimator)),
+          ", Dataset: ", dataset[, 1], "]"
+        ), duration = 6
+      )
+      return("—")
+    }
+  )
 }
 
 # Create the name of an estimator to be added to the first column of the
