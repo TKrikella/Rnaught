@@ -1,0 +1,20 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file. -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Rnaught <a href="https://MI2YorkU.github.io/Rnaught"><img src="man/figures/logo.svg" align="right" height="139" alt="Rnaught Logo"></a>
+
+Rnaught is an R package and web application for estimating the
+[basic reproduction number (_R_~0~)](
+https://en.wikipedia.org/wiki/Basic_reproduction_number) of infectious diseases.
+
+In progress...
