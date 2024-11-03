@@ -1,6 +1,10 @@
 ^\.git$
 ^\.gitattributes$
 ^\.gitignore$
+^\.github$
 ^CITATION\.cff$
 ^LICENSE$
 ^README\.Rmd$
+^docs$
+^pkgdown$
+^_pkgdown\.yml$

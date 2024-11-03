@@ -11,7 +11,7 @@ Description: A collection of methods for estimating the basic reproduction
     number (R0) of infectious diseases. Optionally available as a web
     application using the 'shiny' framework.
 License: AGPL (>= 3)
-URL: https://github.com/MI2YorkU/Rnaught
+URL: https://MI2YorkU.github.io/Rnaught, https://github.com/MI2YorkU/Rnaught
 BugReports: https://github.com/MI2YorkU/Rnaught/issues
 Imports:
     stats,
